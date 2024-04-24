@@ -24,10 +24,10 @@
             </div>
             
             <div class="datetime-picker">
-                <!-- Calendar Component -->
-                <div class='date-picker'>
-                    <input type='text' id='datepicker' name='bookingDate' placeholder='Select Date' required>
-                </div>
+                <!-- Embedded Calendar Component -->
+                <div id='datepicker'></div>
+                <!-- Hidden field to store the selected date -->
+                <input type='hidden' id='bookingDate' name='bookingDate' required>
               
                 <!-- Time slots -->
                 <!-- You will need to implement this according to your requirements -->
@@ -105,8 +105,15 @@
         });   
     
         $( function() {
-            $( "#datepicker" ).datepicker();
-        } );
+        // Initialize the datepicker on the div
+        $( "#datepicker" ).datepicker({
+            onSelect: function(dateText) {
+                // Update the hidden input field with the selected date
+                $('#bookingDate').val(dateText);
+            }
+        });
+    } );
+
 
     </script>
 </body>

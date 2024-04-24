@@ -7,6 +7,7 @@ body {
     justify-content: center;
     align-items: center;
     height: 100vh;
+    box-sizing: border-box; /* Ensures padding is included in width/height */
 }
 
 .booking-container {
@@ -15,8 +16,9 @@ body {
     border-radius: 8px;
     box-shadow: 0px 0px 10px 0px rgba(0,0,0,0.1);
     width: auto;
+    overflow: hidden; /* Prevents child elements from overflowing */
+    box-sizing: border-box; /* Ensures padding is included in width/height */
 }
-
 h2 {
     text-align: center;
     margin-bottom: 20px;
@@ -65,4 +67,170 @@ input[type="submit"] {
 
 input[type="submit"]:hover {
     background-color: #7986CB;
+}
+
+.datetime-picker {
+    width: 100%; /* Full width to contain the calendar */
+}
+
+/* Style the container of the datepicker */
+#datepicker {
+    width: 100%; /* Full width of the container */
+    margin-top: 10px; /* Spacing from the element above */
+    padding: 0;
+    border: 1px solid #ccc; /* Border to match other inputs */
+    border-radius: 4px; /* Border radius to match other inputs */
+    background: #fff; /* White background */
+}
+
+/* Reset the padding and margin for the datepicker table to align headers and numbers */
+.ui-datepicker table {
+    width: 100%;
+    border-collapse: collapse; /* Collapse borders */
+    margin: 0; /* Reset margin */
+}
+
+/* Ensure the text in each cell is centered both horizontally and vertically */
+.ui-datepicker th, 
+.ui-datepicker td {
+    text-align: center; /* Center text horizontally */
+    width: 14.28%;
+    height: 2.5em;
+    padding: 5px 0; /* Provide some padding */
+    border: none; /* Remove borders */
+}
+/* Header styles */
+.ui-datepicker-header {
+    padding: 0.6em; /* Smaller padding */
+    background-color: #f7f7f7; /* Light grey background */
+    border-bottom: 1px solid #e0e0e0; /* Separating line */
+}
+
+/* Adjust the style for individual day cells */
+.ui-datepicker td {
+    padding: 0.1em; /* Less padding for each day cell */
+}
+
+/* Style for non-selected days */
+.ui-datepicker .ui-state-default {
+    background: none; /* No background for normal days */
+    border: none; /* No border for normal days */
+}
+
+/* Style for the selected day */
+.ui-datepicker .ui-state-active, 
+.ui-datepicker .ui-state-active:hover { /* Style for active and hover state */
+    border: none; /* No border */
+    background-color: #5C6BC0; /* Selected day background color */
+    color: white; /* Selected day text color */
+    border-radius: 4px; /* Rounded corners for selected day */
+    padding: 5px 0; /* Vertical padding */
+    width: 100%; /* Full width within the cell */
+    display: block; /* Block display to fill the cell */
+}
+
+/* Style for hover state on days */
+.ui-datepicker .ui-state-hover {
+    background-color: #e4e4e4; /* Light grey background on hover */
+    border-radius: 4px; /* Rounded corners on hover */
+}
+
+/* Remove the default jQuery UI highlight styles */
+.ui-datepicker .ui-state-highlight,
+.ui-datepicker .ui-state-highlight:hover {
+    background: none;
+    border: none;
+}
+
+/* You may also want to adjust the header, prev, and next button styles to match your UI */
+.ui-datepicker .ui-datepicker-header {
+    background-color: #f7f7f7;
+    border-bottom: 1px solid #e0e0e0;
+    line-height: 1.8em; /* Adjust line height to vertically center the text */
+}
+
+.ui-datepicker-prev, .ui-datepicker-next {
+    text-align: center;
+    cursor: pointer;
+}
+
+/* Remove default jQuery UI borders and background on the prev/next buttons */
+.ui-datepicker-prev span, 
+.ui-datepicker-next span {
+    background: none;
+    border: none;
+}
+
+/* Adjust padding for the prev/next containers to align them properly */
+.ui-datepicker-prev,
+.ui-datepicker-next {
+    padding: 5px;
+}
+
+/* Adjust the space between the calendar and the submit button */
+#datepicker {
+    margin-bottom: 20px; /* Add space below the calendar */
+}
+
+/* Ensure visibility of all days */
+.ui-datepicker .ui-state-default {
+    color: #555555; /* Set a default color for the day numbers */
+    /* ... other styles ... */
+}
+
+
+
+/* Make sure the text is not being overridden to be transparent or matching the background */
+.ui-datepicker .ui-state-default,
+.ui-datepicker .ui-state-active,
+.ui-datepicker .ui-state-hover {
+    opacity: 1; /* Reset opacity to ensure visibility */
+    /* ... other styles ... */
+}
+
+/* If the color of the text is blending with the background, set a different text color */
+.ui-datepicker .ui-state-default {
+    color: #333; /* Darker text for better visibility */
+}
+
+/* Styles for today's date */
+.ui-datepicker .ui-datepicker-today .ui-state-default {
+    background: none;
+    border: none;
+    color: #333; /* Make sure today's date isn't styled like the selected date */
+}
+
+.ui-datepicker .ui-datepicker-today .ui-state-active {
+    background-color: #5C6BC0; /* Blue background */
+    color: white; /* White text for visibility */
+    border-radius: 4px;
+}
+
+/* Ensure that today's date is not styled with a border when hovered */
+.ui-datepicker .ui-datepicker-today .ui-state-hover {
+    border: none;
+}
+
+/* Normal day styles */
+.ui-datepicker .ui-state-default {
+    background: none;
+    border: none;
+    color: #555555; /* Standard day color */
+    /* ... other styles ... */
+}
+
+/* Hover state for days */
+.ui-datepicker .ui-state-hover {
+    background-color: #e4e4e4;
+    border-radius: 4px;
+    /* ... other styles ... */
+}
+
+/* Active day styles (selected day) */
+.ui-datepicker .ui-state-active {
+    background-color: #5C6BC0; /* Blue background */
+    color: white; /* White text for selected day */
+    border-radius: 4px;
+    padding: 5px 0;
+    /* ... other styles ... */
 }
