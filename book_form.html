@@ -1,1 +1,89 @@
-ß
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Booking Form</title>
+</head>
+<body>
+    <h2>Book a Slot</h2>
+    <form id = "bookingForm">
+        <label for="name">Full Name:</label><br>
+        <input type="text" id="name" name="name" required><br>
+        
+        <label for="email">Email:</label><br>
+        <input type="email" id="email" name="email" required><br>
+        
+        <label for="datetime">Date and Time:</label><br>
+        <input type="datetime-local" id="bookingTime" name="bookingTime" required><br>
+        
+        <label for="club">Club:</label><br>
+        <select id="club" name="club" required>
+
+        </select><br>
+        
+        <input type="submit" value="Submit">
+    </form>
+
+    <script>
+        // Fetch the clubs from the server and populate the dropdown list
+        document.addEventListener('DOMContentLoaded', (event) => {
+                    fetch('http://127.0.0.1:5001/clubs')
+                    .then(response => response.json())
+                    .then(data => {
+                        const clubSelect = document.getElementById('club');
+                        data.forEach(clubName => {
+                            const option = document.createElement('option')
+                            option.value = clubName;
+                            option.text = clubName;
+                            clubSelect.add(option);
+                    });
+                })
+                .catch(error => console.error('Error', error));
+        });
+        
+        // Handle the form submission to make a POST request to the server
+
+        document.getElementById('bookingForm').addEventListener('submit', (event) => {
+            event.preventDefault();
+    
+            const name = document.getElementById('name').value;
+            const email = document.getElementById('email').value;
+            const bookingTime = document.getElementById('bookingTime').value + ':00Z';
+            const clubId = document.getElementById('club').value;
+        
+            const data = { name:name, email:email, time:bookingTime, club:clubId};
+        
+            fetch('http://localhost:5001/book', {
+                method: 'POST',
+                headers: {
+                    'Content-Type': 'application/json',
+                },
+                body: JSON.stringify(data),
+            })
+
+            .then(response => {
+                if (!response.ok) {
+                    return response.json().then(errorData => {
+                        // Throw an error with the message from the server
+                        throw new Error(errorData.error);
+                    });
+                }
+                return response.json();
+            })
+
+            .then(data => {
+                console.error('Success:', data);
+                alert('Booking Successful!');
+            })
+    
+            .catch((error) => {
+                console.error('Error:', error);
+                 // Display an alert with the error message
+                 alert('Booking failed: ' + error.message);
+            });
+        });   
+
+    </script>
+</body>
+</html>

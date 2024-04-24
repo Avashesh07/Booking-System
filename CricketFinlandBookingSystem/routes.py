@@ -12,7 +12,6 @@ def init_routes(app):
 
     @app.route('/admin/add_club', methods=['POST'])
     def add_club():
-        # Use request.form instead of request.json to access form data
         if 'name' not in request.json:
             return jsonify({'error': 'Bad request, club name is required'}), 400
 
@@ -30,7 +29,10 @@ def init_routes(app):
             db.session.rollback()
             return jsonify({'error': str(e)}), 500
 
-
+    @app.route('/clubs', methods=['GET'])
+    def get_clubs():
+        clubs = Club.query.all()
+        return jsonify([club.name for club in clubs]), 200
 
     @app.route('/book', methods=['POST'])
     def book():
