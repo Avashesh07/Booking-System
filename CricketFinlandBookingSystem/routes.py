@@ -1,7 +1,7 @@
 from . import db
 from datetime import datetime,timedelta
 from flask import request, jsonify
-from .models import Club, Booking
+from .models import Club, Booking, TimeSlotConfig
 
 def init_routes(app):
 
@@ -67,7 +67,7 @@ def init_routes(app):
             return jsonify({'error': 'Maximum of 3 active bookings allowed'}), 400
 
         # Create a new Booking instance
-        new_booking = Booking(name=booking_data['name'], club_id=club.id, time=booking_time)
+        new_booking = Booking(name=booking_data['name'], club_id=club.id, club_name=club.name, time=booking_time)
 
         db.session.add(new_booking)
 
@@ -82,6 +82,67 @@ def init_routes(app):
             db.session.rollback()
             return jsonify({'error': str(e)}), 500
 
+
+    @app.route('/add_time_slot_config', methods=['POST'])
+    def add_time_slot_config():
+        data = request.get_json()
+
+        # Parse date strings to date objects
+        date_format = "%Y-%m-%d"
+        try:
+            date_range_start = datetime.strptime(data['dateRangeStart'], date_format).date()
+            date_range_end = datetime.strptime(data['dateRangeEnd'], date_format).date()
+        except ValueError as e:
+            # Handle incorrect date format
+            return jsonify({'error': str(e)}), 400
+
+        # Check if the range for the given date already exists
+        existing_config = TimeSlotConfig.query.filter(
+            TimeSlotConfig.dateRangeStart <= date_range_end,
+            TimeSlotConfig.dateRangeEnd >= date_range_start
+        ).first()
+
+        if existing_config:
+            return jsonify({'error': 'Range already exists for the given dates'}), 400
+
+        # Proceed to add the new configuration if it doesn't exist
+        new_config = TimeSlotConfig(
+            start_time=data['startTime'],
+            end_time=data['endTime'],
+            increment=int(data['increment']),
+            dateRangeStart=date_range_start,
+            dateRangeEnd=date_range_end
+        )
+        db.session.add(new_config)
+        db.session.commit()
+        return jsonify({'message': 'Time slot configuration added successfully'}), 201
+
+
+    @app.route('/available_slots', methods=['GET'])
+    def available_slots():
+        date_requested = request.args.get('date')
+        date_as_obj = datetime.strptime(date_requested, '%Y-%m-%d').date()
+        
+        configs = TimeSlotConfig.query.filter(
+            TimeSlotConfig.dateRangeStart <= date_as_obj,
+            TimeSlotConfig.dateRangeEnd >= date_as_obj
+        ).all()
+        
+        if not configs:
+            return jsonify({'error': 'No time slots available for the selected date'}), 404
+        
+        available_slots = []
+        # Assuming configs contains non-overlapping time ranges
+        for config in configs:
+            start_time = datetime.combine(date_as_obj, datetime.strptime(config.start_time, '%H:%M').time())
+            end_time = datetime.combine(date_as_obj, datetime.strptime(config.end_time, '%H:%M').time())
+            
+            while start_time < end_time:
+                if not Booking.query.filter_by(time=start_time).first():
+                    available_slots.append(start_time.strftime('%H:%M'))
+                start_time += timedelta(minutes=config.increment)
+        
+        return jsonify(available_slots)
 
     @app.route('/cleanup', methods=['GET'])
 

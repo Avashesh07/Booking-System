@@ -33,13 +33,8 @@
                 <!-- You will need to implement this according to your requirements -->
                 <!-- This is just a placeholder for example purposes -->
                 <div class='time-picker'>
-                    <!-- Time slots will be populated here -->
-                    <!-- Placeholder for time slot buttons -->
-                    <!-- Example: 
-                         <button type='button' class='time-slot'>07:00 AM</button> 
-                         Add more buttons similarly for each time slot
-                     -->
-                </div>
+                    <div class='time-slots'></div> <!-- Slots will be populated dynamically -->
+                </div>                     
               </div>
             <input type="submit" value="Submit">
         </form>
@@ -61,19 +56,102 @@
                 })
                 .catch(error => console.error('Error', error));
         });
+
+        $(function() {
+            // Initialize the datepicker on the div
+            $("#datepicker").datepicker({
+                dateFormat: "yy-mm-dd",
+                onSelect: function(dateText) {
+                    $('#bookingDate').val(dateText);
+                    fetchTimeSlots(dateText);  // Fetch slots when a new date is selected
+                }
+            });
+
+            function fetchTimeSlots(date) {
+                fetch(`http://localhost:5001/available_slots?date=${date}`)
+                .then(response => {
+                    if (!response.ok) {
+                        throw new Error('No time slots available for the selected date');
+                    }
+                    return response.json();
+                })
+                .then(slots => {
+                    const slotsContainer = document.querySelector('.time-slots');
+                    slotsContainer.innerHTML = ''; // Clear previous slots
+                    slots.forEach(slot => {
+                        const button = document.createElement('button');
+                        button.type = 'button';
+                        button.classList.add('time-slot');
+                        button.textContent = slot;
+                        button.onclick = function() {
+                            document.getElementById('bookingTime').value = date + 'T' + slot + ':00Z';
+                        };
+                        slotsContainer.appendChild(button);
+                    });
+                })
+                .catch(error => {
+                    console.error(error);
+                    const slotsContainer = document.querySelector('.time-slots');
+                    slotsContainer.innerHTML = '<p>No available time slots for this date.</p>'; // Show message
+                });
+            }
+
+            // Set the initial value of the hidden date input to today's date
+            var today = new Date();
+            var dateStr = $.datepicker.formatDate('yy-mm-dd', today);
+            $('#bookingDate').val(dateStr);
+            fetchTimeSlots(dateStr);  // Also fetch slots right after initializing the datepicker
+        });
+
+
+
+        // Select the container that holds the time slots
+        const timeSlotsContainer = document.querySelector('.time-slots');
+
+        // Add event listener to the time slots container
+        timeSlotsContainer.addEventListener('click', (event) => {
+                // Check if a time slot button was clicked
+                if (event.target.classList.contains('time-slot')) {
+                    // Remove the 'selected' class from all time slot buttons
+                    timeSlotsContainer.querySelectorAll('.time-slot').forEach(slot => {
+                        slot.classList.remove('selected');
+                    });
+
+                    // Add the 'selected' class to the clicked time slot button
+                    event.target.classList.add('selected');
+
+                    // Update the value of the hidden input with the selected time
+                    const selectedTime = event.target.textContent || event.target.innerText;
+                    document.getElementById('bookingTime').value = selectedTime;
+                }
+            });
         
         // Handle the form submission to make a POST request to the server
+        
 
         document.getElementById('bookingForm').addEventListener('submit', (event) => {
             event.preventDefault();
     
             const name = document.getElementById('name').value;
             const email = document.getElementById('email').value;
-            const bookingTime = document.getElementById('bookingTime').value + ':00Z';
-            const clubId = document.getElementById('club').value;
-        
-            const data = { name:name, email:email, time:bookingTime, club:clubId};
-        
+            const club = document.getElementById('club');
+            const clubId = club.options[club.selectedIndex].value;
+            const clubName = club.options[club.selectedIndex].text; 
+
+            // Retrieve the date and time
+            const bookingDate = document.getElementById('bookingDate').value;
+            const bookingTime = document.getElementById('bookingTime').value;
+
+            // Combine date and time
+            // The 'Z' indicates that this time is in UTC
+            const formattedDateTime = bookingDate + 'T' + bookingTime + ':00Z';
+
+
+            // The data object now includes the formattedDateTime
+            const data = { name: name, email: email, time: formattedDateTime, club: clubId, club_name: clubName};
+
+
+            
             fetch('http://localhost:5001/book', {
                 method: 'POST',
                 headers: {
@@ -104,16 +182,7 @@
             });
         });   
     
-        $( function() {
-        // Initialize the datepicker on the div
-        $( "#datepicker" ).datepicker({
-            onSelect: function(dateText) {
-                // Update the hidden input field with the selected date
-                $('#bookingDate').val(dateText);
-            }
-        });
-    } );
-
+  
 
     </script>
 </body>

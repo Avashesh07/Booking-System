@@ -36,6 +36,14 @@ h2 {
     border: 1px solid #ccc;
 }
 
+#club {
+    width: 40%; /* Set the width of the select box to 50% of its parent element */
+    display: block; /* Makes the element a block element, allowing width to be set */
+    padding: 10px; /* Add some padding inside the select box for aesthetics */
+    border-radius: 4px; /* Rounds the corners to match other input elements */
+    border: 1px solid #ccc; /* Adds a border similar to other input elements */
+}
+
 label {
     display: block;
     margin-bottom: 5px;
@@ -101,10 +109,56 @@ input[type="submit"]:hover {
 }
 /* Header styles */
 .ui-datepicker-header {
-    padding: 0.6em; /* Smaller padding */
-    background-color: #f7f7f7; /* Light grey background */
-    border-bottom: 1px solid #e0e0e0; /* Separating line */
+    display: flex;
+    align-items: center;
+    justify-content: flex-end; /* This spreads out the children to the far ends; change this to center */
+    padding: 0.6em;
+    background-color: #f7f7f7;
+    flex-direction:row;
+    border-bottom: 1px solid #e0e0e0;
 }
+
+
+/* Adjust the style for prev and next buttons to make them appear like arrows */
+.ui-datepicker-prev:before,
+.ui-datepicker-next:after {
+    content: '';
+    display: flex;
+    align-items:center;
+    justify-content:center;
+    width: 30px; /* Width of the arrow image */
+    height: 30px; /* Height of the arrow image */
+    background-size: contain;
+    background-repeat: no-repeat;
+    margin-right: 10px;
+}
+
+.ui-datepicker-prev:before {
+    background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='1em' height='1em' viewBox='0 0 24 24'%3E%3Cpath fill='black' d='m11.71 15.29l2.59-2.59a.996.996 0 0 0 0-1.41L11.71 8.7c-.63-.62-1.71-.18-1.71.71v5.17c0 .9 1.08 1.34 1.71.71'/%3E%3C/svg%3E");
+    transform: rotate(180deg);
+}
+
+.ui-datepicker-next:after {
+    background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='1em' height='1em' viewBox='0 0 24 24'%3E%3Cpath fill='black' d='m11.71 15.29l2.59-2.59a.996.996 0 0 0 0-1.41L11.71 8.7c-.63-.62-1.71-.18-1.71.71v5.17c0 .9 1.08 1.34 1.71.71'/%3E%3C/svg%3E");
+}
+
+/* Adjust margin for the last arrow */
+.ui-datepicker-next {
+    margin-right: 0; /* No margin to the right of the next button */
+}
+
+.ui-datepicker-title {
+    margin-left: auto; /* Pushes the title to the right end */
+    padding-left: 10px; /* Optional: Adds some padding between the arrows and the title */
+}
+
+/* Remove the default text of prev and next buttons */
+.ui-datepicker-prev span,
+.ui-datepicker-next span {
+    display: none;
+}
+
+
 
 /* Adjust the style for individual day cells */
 .ui-datepicker td {
@@ -142,56 +196,16 @@ input[type="submit"]:hover {
     border: none;
 }
 
-/* You may also want to adjust the header, prev, and next button styles to match your UI */
-.ui-datepicker .ui-datepicker-header {
-    background-color: #f7f7f7;
-    border-bottom: 1px solid #e0e0e0;
-    line-height: 1.8em; /* Adjust line height to vertically center the text */
-}
 
-.ui-datepicker-prev, .ui-datepicker-next {
-    text-align: center;
-    cursor: pointer;
-}
 
-/* Remove default jQuery UI borders and background on the prev/next buttons */
-.ui-datepicker-prev span, 
-.ui-datepicker-next span {
-    background: none;
-    border: none;
-}
-
-/* Adjust padding for the prev/next containers to align them properly */
-.ui-datepicker-prev,
-.ui-datepicker-next {
-    padding: 5px;
-}
 
 /* Adjust the space between the calendar and the submit button */
 #datepicker {
     margin-bottom: 20px; /* Add space below the calendar */
 }
 
-/* Ensure visibility of all days */
-.ui-datepicker .ui-state-default {
-    color: #555555; /* Set a default color for the day numbers */
-    /* ... other styles ... */
-}
 
 
-
-/* Make sure the text is not being overridden to be transparent or matching the background */
-.ui-datepicker .ui-state-default,
-.ui-datepicker .ui-state-active,
-.ui-datepicker .ui-state-hover {
-    opacity: 1; /* Reset opacity to ensure visibility */
-    /* ... other styles ... */
-}
-
-/* If the color of the text is blending with the background, set a different text color */
-.ui-datepicker .ui-state-default {
-    color: #333; /* Darker text for better visibility */
-}
 
 /* Styles for today's date */
 .ui-datepicker .ui-datepicker-today .ui-state-default {
@@ -233,4 +247,40 @@ input[type="submit"]:hover {
     border-radius: 4px;
     padding: 5px 0;
     /* ... other styles ... */
+}
+
+.time-picker {
+    margin-top: 20px; /* Add some space between the calendar and time picker */
+    text-align: center;
+    margin-bottom: 20px;
+    width: 100%; /* Full width to center time slots inside */
+}
+
+.time-slots {
+    display: flex;
+    flex-wrap: wrap;
+    justify-content: center;
+    gap: 10px; /* Add space between buttons */
+}
+
+.time-slot {
+    padding: 15px 5px;
+    background-color: #fff;
+    border: 1px solid #ccc;
+    border-radius: 4px;
+    cursor: pointer;
+    transition: background-color 0.3s;
+    margin-bottom: 10px; /* Add space between rows of buttons */
+    flex: 0 0 30%; /* Each button will be almost half the width of the time-slots container */
+    max-width: 30%; /* Ensure buttons don't grow larger than half-width */
+}
+
+.time-slot:hover {
+    background-color: #5C6BC0;
+    color: white;
+}
+
+.time-slot.selected {
+    background-color: #5C6BC0;
+    color: white;
 }
