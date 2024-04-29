@@ -34,6 +34,7 @@
                 <!-- This is just a placeholder for example purposes -->
                 <div class='time-picker'>
                     <div class='time-slots'></div> <!-- Slots will be populated dynamically -->
+                    <input type="hidden" id="bookingTime" name="bookingTime">
                 </div>                     
               </div>
             <input type="submit" value="Submit">
@@ -76,8 +77,18 @@
                     return response.json();
                 })
                 .then(slots => {
+                    // Sort the slots by time before creating buttons
+                    slots.sort((a, b) => {
+                        // Convert time slots to date objects to compare
+                        const timeA = new Date(`1970-01-01T${a}:00Z`);
+                        const timeB = new Date(`1970-01-01T${b}:00Z`);
+                        return timeA - timeB;
+                    });
+
                     const slotsContainer = document.querySelector('.time-slots');
                     slotsContainer.innerHTML = ''; // Clear previous slots
+
+                    // Create a button for each slot
                     slots.forEach(slot => {
                         const button = document.createElement('button');
                         button.type = 'button';
@@ -85,6 +96,9 @@
                         button.textContent = slot;
                         button.onclick = function() {
                             document.getElementById('bookingTime').value = date + 'T' + slot + ':00Z';
+                            // Deselect other buttons and select this one
+                            document.querySelectorAll('.time-slot').forEach(b => b.classList.remove('selected'));
+                            button.classList.add('selected');
                         };
                         slotsContainer.appendChild(button);
                     });
@@ -181,8 +195,7 @@
                  alert('Booking failed: ' + error.message);
             });
         });   
-    
-  
+
 
     </script>
 </body>
