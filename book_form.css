@@ -133,6 +133,13 @@ input[type="submit"]:hover {
     margin-right: 10px;
 }
 
+
+.ui-datepicker-prev:hover,.ui-datepicker-next:hover{
+    background: #ececec;
+    border-radius: 20px;
+}
+
+
 .ui-datepicker-prev:before {
     background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='1em' height='1em' viewBox='0 0 24 24'%3E%3Cpath fill='black' d='m11.71 15.29l2.59-2.59a.996.996 0 0 0 0-1.41L11.71 8.7c-.63-.62-1.71-.18-1.71.71v5.17c0 .9 1.08 1.34 1.71.71'/%3E%3C/svg%3E");
     transform: rotate(180deg);
@@ -165,29 +172,7 @@ input[type="submit"]:hover {
     padding: 0.1em; /* Less padding for each day cell */
 }
 
-/* Style for non-selected days */
-.ui-datepicker .ui-state-default {
-    background: none; /* No background for normal days */
-    border: none; /* No border for normal days */
-}
 
-/* Style for the selected day */
-.ui-datepicker .ui-state-active, 
-.ui-datepicker .ui-state-active:hover { /* Style for active and hover state */
-    border: none; /* No border */
-    background-color: #5C6BC0; /* Selected day background color */
-    color: white; /* Selected day text color */
-    border-radius: 4px; /* Rounded corners for selected day */
-    padding: 5px 0; /* Vertical padding */
-    width: 100%; /* Full width within the cell */
-    display: block; /* Block display to fill the cell */
-}
-
-/* Style for hover state on days */
-.ui-datepicker .ui-state-hover {
-    background-color: #e4e4e4; /* Light grey background on hover */
-    border-radius: 4px; /* Rounded corners on hover */
-}
 
 /* Remove the default jQuery UI highlight styles */
 .ui-datepicker .ui-state-highlight,
@@ -198,10 +183,20 @@ input[type="submit"]:hover {
 
 
 
-
 /* Adjust the space between the calendar and the submit button */
 #datepicker {
     margin-bottom: 20px; /* Add space below the calendar */
+}
+
+
+
+/* Normal day styles */
+.ui-datepicker .ui-state-default {
+    background: none;
+    border: none;
+    text-decoration: none;
+    color: #101010; /* Standard day color */
+    /* ... other styles ... */
 }
 
 
@@ -211,43 +206,46 @@ input[type="submit"]:hover {
 .ui-datepicker .ui-datepicker-today .ui-state-default {
     background: none;
     border: none;
-    color: #333; /* Make sure today's date isn't styled like the selected date */
+    text-decoration: underline;
 }
+
+
+.ui-datepicker .ui-datepicker-calendar a:not(.ui-state-active):hover {
+    background-color: #ececec;
+    border-radius: 20px;
+    padding: 10px;
+}
+
+
+
 
 .ui-datepicker .ui-datepicker-today .ui-state-active {
     background-color: #5C6BC0; /* Blue background */
     color: white; /* White text for visibility */
-    border-radius: 4px;
+    border-radius: 20px;
 }
 
-/* Ensure that today's date is not styled with a border when hovered */
-.ui-datepicker .ui-datepicker-today .ui-state-hover {
-    border: none;
+
+
+/* Grey out the unavailable dates */
+.ui-datepicker .ui-datepicker-calendar .ui-state-default:not(a){
+    color: #dadada !important; /* Greyed out text */
 }
 
-/* Normal day styles */
-.ui-datepicker .ui-state-default {
-    background: none;
-    border: none;
-    color: #555555; /* Standard day color */
-    /* ... other styles ... */
-}
 
-/* Hover state for days */
-.ui-datepicker .ui-state-hover {
-    background-color: #e4e4e4;
-    border-radius: 4px;
-    /* ... other styles ... */
-}
 
 /* Active day styles (selected day) */
 .ui-datepicker .ui-state-active {
     background-color: #5C6BC0; /* Blue background */
     color: white; /* White text for selected day */
-    border-radius: 4px;
-    padding: 5px 0;
+    border-radius: 20px;
+    padding: 10px;
     /* ... other styles ... */
 }
+
+
+
+
 
 .time-picker {
     margin-top: 20px; /* Add some space between the calendar and time picker */
