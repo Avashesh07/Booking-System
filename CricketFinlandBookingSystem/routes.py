@@ -2,6 +2,7 @@ from . import db
 from datetime import datetime,timedelta
 from flask import request, jsonify
 from .models import Club, Booking, TimeSlotConfig
+from sqlalchemy import and_,or_
 
 def init_routes(app):
 
@@ -84,6 +85,7 @@ def init_routes(app):
 
 
     @app.route('/add_time_slot_config', methods=['POST'])
+
     def add_time_slot_config():
         data = request.get_json()
 
@@ -93,19 +95,45 @@ def init_routes(app):
             date_range_start = datetime.strptime(data['dateRangeStart'], date_format).date()
             date_range_end = datetime.strptime(data['dateRangeEnd'], date_format).date()
         except ValueError as e:
-            # Handle incorrect date format
-            return jsonify({'error': str(e)}), 400
+            return jsonify({'error': 'Invalid date format'}), 400
 
-        # Check if the range for the given date already exists
+        # Convert times to time objects
+        try:
+            start_time = datetime.strptime(data['startTime'], '%H:%M').time()
+            end_time = datetime.strptime(data['endTime'], '%H:%M').time()
+        except ValueError as e:
+            return jsonify({'error': 'Invalid time format'}), 400
+
+        # Check if the exact same range and time already exists
         existing_config = TimeSlotConfig.query.filter(
-            TimeSlotConfig.dateRangeStart <= date_range_end,
-            TimeSlotConfig.dateRangeEnd >= date_range_start
+            and_(
+                TimeSlotConfig.dateRangeStart == date_range_start,
+                TimeSlotConfig.dateRangeEnd == date_range_end,
+                TimeSlotConfig.start_time == data['startTime'],
+                TimeSlotConfig.end_time == data['endTime']
+            )
         ).first()
 
         if existing_config:
-            return jsonify({'error': 'Range already exists for the given dates'}), 400
+            return jsonify({'error': 'Exact same time slot configuration already exists'}), 409
 
-        # Proceed to add the new configuration if it doesn't exist
+        # Check if there are conflicting time slots for the same date range
+        conflicting_slots = TimeSlotConfig.query.filter(
+            and_(
+                TimeSlotConfig.dateRangeStart <= date_range_end,
+                TimeSlotConfig.dateRangeEnd >= date_range_start
+            ),
+            or_(
+                and_(TimeSlotConfig.start_time < data['endTime'], TimeSlotConfig.end_time > data['startTime']),
+                and_(TimeSlotConfig.start_time < data['endTime'], TimeSlotConfig.start_time >= data['startTime']),
+                and_(TimeSlotConfig.end_time > data['startTime'], TimeSlotConfig.end_time <= data['endTime'])
+            )
+        ).first()
+
+        if conflicting_slots:
+            return jsonify({'error': 'Conflicting time slots exist for the given dates and times'}), 409
+
+        # Proceed to add the new configuration if there are no conflicts
         new_config = TimeSlotConfig(
             start_time=data['startTime'],
             end_time=data['endTime'],
@@ -114,11 +142,16 @@ def init_routes(app):
             dateRangeEnd=date_range_end
         )
         db.session.add(new_config)
-        db.session.commit()
-        return jsonify({'message': 'Time slot configuration added successfully'}), 201
-
+        try:
+            db.session.commit()
+            return jsonify({'message': 'New time slot configuration added successfully'}), 201
+        except Exception as e:
+            db.session.rollback()
+            return jsonify({'error': 'Database error'}), 500
+        
 
     @app.route('/available_slots', methods=['GET'])
+    
     def available_slots():
         date_requested = request.args.get('date')
         date_as_obj = datetime.strptime(date_requested, '%Y-%m-%d').date()
