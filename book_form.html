@@ -34,7 +34,7 @@
                 <!-- This is just a placeholder for example purposes -->
                 <div class='time-picker'>
                     <div class='time-slots'></div> <!-- Slots will be populated dynamically -->
-                    <input type="hidden" id="bookingTime" name="bookingTime">
+                    <input type="hidden" id="bookingTime" name="bookingTime">             
                 </div>                     
               </div>
             <input type="submit" value="Submit">
@@ -42,6 +42,9 @@
     </div>
 
     <script>
+        // Global variable to hold available dates
+        var availableDates = [];
+
         // Fetch the clubs from the server and populate the dropdown list
         document.addEventListener('DOMContentLoaded', (event) => {
                     fetch('http://127.0.0.1:5001/clubs')
@@ -59,9 +62,28 @@
         });
 
         $(function() {
-            // Initialize the datepicker on the div
+            // Fetch the available dates from the server and store them
+            fetch('http://localhost:5001/available_dates')
+                .then(response => response.json())
+                .then(data => {
+                    // Update the availableDates array
+                    availableDates = data.map(date => new Date(date));
+                    // Now that we have the available dates, refresh the datepicker
+                    $("#datepicker").datepicker('refresh');  // This line refreshes the datepicker
+                })
+                .catch(error => console.error('Error fetching available dates:', error));
+
+            // Initialize the datepicker with beforeShowDay function
             $("#datepicker").datepicker({
                 dateFormat: "yy-mm-dd",
+                beforeShowDay: function(date) {
+                    var dateStr = jQuery.datepicker.formatDate('yy-mm-dd', date);
+                    var isAvailable = availableDates.some(function(availableDate) {
+                        return availableDate.toDateString() === date.toDateString();
+                    });
+                    console.log(dateStr + ' is ' + (isAvailable ? 'available' : 'not available'));
+                    return [isAvailable, "", ""];
+                },
                 onSelect: function(dateText) {
                     $('#bookingDate').val(dateText);
                     fetchTimeSlots(dateText);  // Fetch slots when a new date is selected

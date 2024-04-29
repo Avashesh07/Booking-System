@@ -144,6 +144,43 @@ def init_routes(app):
         
         return jsonify(available_slots)
 
+    @app.route('/available_dates', methods=['GET'])
+    def available_dates():
+        # Get all the configurations for time slots
+        configs = TimeSlotConfig.query.all()
+        # Prepare a list to hold available dates
+        available_dates_list = []
+        
+        # Loop through each configuration
+        for config in configs:
+            current_date = config.dateRangeStart
+            while current_date <= config.dateRangeEnd:
+                # Check each time slot for the current date to see if it's available
+                start_time = datetime.combine(current_date, datetime.strptime(config.start_time, '%H:%M').time())
+                end_time = datetime.combine(current_date, datetime.strptime(config.end_time, '%H:%M').time())
+                time_slot_available = False
+                
+                while start_time < end_time:
+                    # Check if a booking already exists for the given time slot
+                    if not Booking.query.filter_by(time=start_time).first():
+                        time_slot_available = True
+                        break
+                    # Increment the time slot
+                    start_time += timedelta(minutes=config.increment)
+                
+                # If at least one time slot is available, add the date to the list
+                if time_slot_available:
+                    available_dates_list.append(current_date.strftime('%Y-%m-%d'))
+                
+                # Go to the next date
+                current_date += timedelta(days=1)
+        
+        # Remove duplicates before returning the list
+        unique_dates = list(set(available_dates_list))
+        return jsonify(unique_dates)
+    
+
+    
     @app.route('/cleanup', methods=['GET'])
 
     def cleanup_old_bookings():
