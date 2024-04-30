@@ -11,7 +11,7 @@ document.addEventListener('DOMContentLoaded', (event) => {
                 const option = document.createElement('option')
                 option.value = clubName;
                 option.text = clubName;
-                clubSelect.add(option);
+                clubSelect.appendChild(option); // Append new options below the placeholder
             });
         })
         .catch(error => console.error('Error', error));

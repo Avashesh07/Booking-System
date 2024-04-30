@@ -13,7 +13,14 @@
 </head>
 
 <body>
-
+    <nav>
+        <ul>
+            <li><a href="/">Book Form</a></li>
+            <li><a href="/admin">Admin Page</a></li>
+            <li><a href="/time_slot">Time Slot Management</a></li>
+            <li><a href="/logout">Logout</a></li>
+        </ul>
+    </nav>
     <!-- Div for form -->
     <div class="booking-container">
         <h2>Book a Slot</h2>
@@ -22,6 +29,7 @@
                 <input type="text" id="name" name="name" placeholder="Full Name" required>
                 <input type="email" id="email" name="email" placeholder="Email" required>
                 <select id="club" name="club" required>
+                    <option value="" disabled selected>Select a Club</option>
                     <!-- Options will be populated here -->
                 </select>
             </div>
