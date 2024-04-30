@@ -1,0 +1,48 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <link rel="stylesheet" href="//code.jquery.com/ui/1.12.1/themes/base/jquery-ui.css">
+    <link rel="stylesheet" href="book_form.css">
+    <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
+    <script src="https://code.jquery.com/ui/1.12.1/jquery-ui.min.js"></script>
+    <script defer src="book_form.js"></script>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Booking Form</title>
+</head>
+
+<body>
+
+    <!-- Div for form -->
+    <div class="booking-container">
+        <h2>Book a Slot</h2>
+        <form id="bookingForm">
+            <div class="user-details">
+                <input type="text" id="name" name="name" placeholder="Full Name" required>
+                <input type="email" id="email" name="email" placeholder="Email" required>
+                <select id="club" name="club" required>
+                    <!-- Options will be populated here -->
+                </select>
+            </div>
+
+            <div class="datetime-picker">
+                <!-- Embedded Calendar Component -->
+                <div id='datepicker'></div>
+                <!-- Hidden field to store the selected date -->
+                <input type='hidden' id='bookingDate' name='bookingDate' required>
+
+                <!-- Time slots -->
+                <!-- You will need to implement this according to your requirements -->
+                <!-- This is just a placeholder for example purposes -->
+                <div class='time-picker'>
+                    <div class='time-slots'></div> <!-- Slots will be populated dynamically -->
+                    <input type="hidden" id="bookingTime" name="bookingTime">
+                </div>
+            </div>
+            <input type="submit" value="Submit">
+        </form>
+    </div>
+</body>
+
+</html>

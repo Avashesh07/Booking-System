@@ -1,0 +1,48 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Configure Time Slots</title>
+    <link rel="stylesheet" href="time_slot.css"> <!-- Link to the CSS stylesheet -->
+</head>
+
+<body>
+    <div class="container">
+        <h1>Availability Manager</h1>
+        <form id="timeSlotConfigForm">
+            <div>
+                <label for="startTime">Start Time:</label>
+                <select id="startTime" required>
+                    <option value="">Select Start Time</option>
+                    <!-- Options populated via JavaScript -->
+                </select>
+            </div>
+            <div>
+                <label for="endTime">End Time:</label>
+                <select id="endTime" required>
+                    <option value="">Select End Time</option>
+                    <!-- Options populated via JavaScript -->
+                </select>
+            </div>
+            <div class="form-group">
+                <label for="increment">Increment (in minutes):</label>
+                <input type="number" id="increment" min="30" max="120" step="30" value="60" required>
+            </div>
+            <div>
+                <label for="dateRangeStart">Date Range Start:</label>
+                <input type="date" id="dateRangeStart" required>
+            </div>
+            <div>
+                <label for="dateRangeEnd">Date Range End:</label>
+                <input type="date" id="dateRangeEnd" required>
+            </div>
+            <div class="form-actions">
+                <button type="submit">Add Availability</button>
+            </div>
+        </form>
+    </div>
+</body>
+
+</html>

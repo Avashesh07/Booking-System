@@ -1,24 +1,30 @@
 body {
-    font-family: Arial, sans-serif;
+    font-family: 'Roboto', sans-serif;
     background-color: #f0f0f0;
+    color: #333;
     margin: 0;
     padding: 0;
     display: flex;
     justify-content: center;
     align-items: center;
-    height: 100vh;
-    box-sizing: border-box; /* Ensures padding is included in width/height */
+    min-height: 100vh;
+    box-sizing: border-box;
+    /* Ensures padding is included in width/height */
 }
 
 .booking-container {
-    background-color: white;
-    padding: 20px;
+    background-color: #fff;
+    padding: 25px;
     border-radius: 8px;
-    box-shadow: 0px 0px 10px 0px rgba(0,0,0,0.1);
+    box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
     width: auto;
-    overflow: hidden; /* Prevents child elements from overflowing */
-    box-sizing: border-box; /* Ensures padding is included in width/height */
+    /* Fixed width */
+    overflow: hidden;
+    /* Prevents child elements from overflowing */
+    box-sizing: border-box;
+    /* Ensures padding is included in width/height */
 }
+
 h2 {
     text-align: center;
     margin-bottom: 20px;
@@ -28,7 +34,8 @@ h2 {
     margin-bottom: 20px;
 }
 
-.user-details input, .user-details select {
+.user-details input,
+.user-details select {
     width: 100%;
     padding: 10px;
     margin-bottom: 10px;
@@ -37,11 +44,16 @@ h2 {
 }
 
 #club {
-    width: 40%; /* Set the width of the select box to 50% of its parent element */
-    display: block; /* Makes the element a block element, allowing width to be set */
-    padding: 10px; /* Add some padding inside the select box for aesthetics */
-    border-radius: 4px; /* Rounds the corners to match other input elements */
-    border: 1px solid #ccc; /* Adds a border similar to other input elements */
+    width: 40%;
+    /* Set the width of the select box to 50% of its parent element */
+    display: block;
+    /* Makes the element a block element, allowing width to be set */
+    padding: 10px;
+    /* Add some padding inside the select box for aesthetics */
+    border-radius: 4px;
+    /* Rounds the corners to match other input elements */
+    border: 1px solid #ccc;
+    /* Adds a border similar to other input elements */
 }
 
 label {
@@ -49,7 +61,9 @@ label {
     margin-bottom: 5px;
 }
 
-input[type="text"], input[type="email"], input[type="datetime-local"] {
+input[type="text"],
+input[type="email"],
+input[type="datetime-local"] {
     width: 95%;
     padding: 10px;
     margin-bottom: 10px;
@@ -61,8 +75,8 @@ input[type="text"], input[type="email"], input[type="datetime-local"] {
 
 input[type="submit"] {
     width: 30%;
-    text-align:center;
-    display:block;
+    text-align: center;
+    display: block;
     padding: 10px;
     border-radius: 4px;
     margin-left: auto;
@@ -78,43 +92,56 @@ input[type="submit"]:hover {
 }
 
 .datetime-picker {
-    width: 100%; /* Full width to contain the calendar */
+    width: 100%;
+    /* Full width to contain the calendar */
 }
 
 /* Style the container of the datepicker */
 #datepicker {
-    width: 100%; /* Full width of the container */
-    margin-top: 10px; /* Spacing from the element above */
+    width: 100%;
+    /* Full width of the container */
+    margin-top: 10px;
+    /* Spacing from the element above */
     padding: 0;
-    border: 1px solid #ccc; /* Border to match other inputs */
-    border-radius: 4px; /* Border radius to match other inputs */
-    background: #fff; /* White background */
+    border: 1px solid #ccc;
+    /* Border to match other inputs */
+    border-radius: 4px;
+    /* Border radius to match other inputs */
+    background: #fff;
+    /* White background */
 }
 
 /* Reset the padding and margin for the datepicker table to align headers and numbers */
 .ui-datepicker table {
     width: 100%;
-    border-collapse: collapse; /* Collapse borders */
-    margin: 0; /* Reset margin */
+    border-collapse: collapse;
+    /* Collapse borders */
+    margin: 0;
+    /* Reset margin */
 }
 
 /* Ensure the text in each cell is centered both horizontally and vertically */
-.ui-datepicker th, 
+.ui-datepicker th,
 .ui-datepicker td {
-    text-align: center; /* Center text horizontally */
+    text-align: center;
+    /* Center text horizontally */
     width: 14.28%;
     height: 2.5em;
-    padding: 5px 0; /* Provide some padding */
-    border: none; /* Remove borders */
+    padding: 5px 0;
+    /* Provide some padding */
+    border: none;
+    /* Remove borders */
 }
+
 /* Header styles */
 .ui-datepicker-header {
     display: flex;
     align-items: center;
-    justify-content: flex-end; /* This spreads out the children to the far ends; change this to center */
+    justify-content: flex-end;
+    /* This spreads out the children to the far ends; change this to center */
     padding: 0.6em;
     background-color: #f7f7f7;
-    flex-direction:row;
+    flex-direction: row;
     border-bottom: 1px solid #e0e0e0;
 }
 
@@ -124,17 +151,20 @@ input[type="submit"]:hover {
 .ui-datepicker-next:after {
     content: '';
     display: flex;
-    align-items:center;
-    justify-content:center;
-    width: 30px; /* Width of the arrow image */
-    height: 30px; /* Height of the arrow image */
+    align-items: center;
+    justify-content: center;
+    width: 30px;
+    /* Width of the arrow image */
+    height: 30px;
+    /* Height of the arrow image */
     background-size: contain;
     background-repeat: no-repeat;
     margin-right: 10px;
 }
 
 
-.ui-datepicker-prev:hover,.ui-datepicker-next:hover{
+.ui-datepicker-prev:hover,
+.ui-datepicker-next:hover {
     background: #ececec;
     border-radius: 20px;
 }
@@ -151,12 +181,15 @@ input[type="submit"]:hover {
 
 /* Adjust margin for the last arrow */
 .ui-datepicker-next {
-    margin-right: 0; /* No margin to the right of the next button */
+    margin-right: 0;
+    /* No margin to the right of the next button */
 }
 
 .ui-datepicker-title {
-    margin-left: auto; /* Pushes the title to the right end */
-    padding-left: 10px; /* Optional: Adds some padding between the arrows and the title */
+    margin-left: auto;
+    /* Pushes the title to the right end */
+    padding-left: 10px;
+    /* Optional: Adds some padding between the arrows and the title */
 }
 
 /* Remove the default text of prev and next buttons */
@@ -169,7 +202,8 @@ input[type="submit"]:hover {
 
 /* Adjust the style for individual day cells */
 .ui-datepicker td {
-    padding: 0.1em; /* Less padding for each day cell */
+    padding: 0.1em;
+    /* Less padding for each day cell */
 }
 
 
@@ -185,7 +219,8 @@ input[type="submit"]:hover {
 
 /* Adjust the space between the calendar and the submit button */
 #datepicker {
-    margin-bottom: 20px; /* Add space below the calendar */
+    margin-bottom: 20px;
+    /* Add space below the calendar */
 }
 
 
@@ -195,7 +230,8 @@ input[type="submit"]:hover {
     background: none;
     border: none;
     text-decoration: none;
-    color: #101010; /* Standard day color */
+    color: #101010;
+    /* Standard day color */
     /* ... other styles ... */
 }
 
@@ -220,24 +256,29 @@ input[type="submit"]:hover {
 
 
 .ui-datepicker .ui-datepicker-today .ui-state-active {
-    background-color: #5C6BC0; /* Blue background */
-    color: white; /* White text for visibility */
+    background-color: #5C6BC0;
+    /* Blue background */
+    color: white;
+    /* White text for visibility */
     border-radius: 20px;
 }
 
 
 
 /* Grey out the unavailable dates */
-.ui-datepicker .ui-datepicker-calendar .ui-state-default:not(a){
-    color: #dadada !important; /* Greyed out text */
+.ui-datepicker .ui-datepicker-calendar .ui-state-default:not(a) {
+    color: #dadada !important;
+    /* Greyed out text */
 }
 
 
 
 /* Active day styles (selected day) */
 .ui-datepicker .ui-state-active {
-    background-color: #5C6BC0; /* Blue background */
-    color: white; /* White text for selected day */
+    background-color: #5C6BC0;
+    /* Blue background */
+    color: white;
+    /* White text for selected day */
     border-radius: 20px;
     padding: 10px;
     /* ... other styles ... */
@@ -248,17 +289,20 @@ input[type="submit"]:hover {
 
 
 .time-picker {
-    margin-top: 20px; /* Add some space between the calendar and time picker */
+    margin-top: 20px;
+    /* Add some space between the calendar and time picker */
     text-align: center;
     margin-bottom: 20px;
-    width: 100%; /* Full width to center time slots inside */
+    width: 100%;
+    /* Full width to center time slots inside */
 }
 
 .time-slots {
     display: flex;
     flex-wrap: wrap;
     justify-content: center;
-    gap: 10px; /* Add space between buttons */
+    gap: 10px;
+    /* Add space between buttons */
 }
 
 .time-slot {
@@ -268,10 +312,14 @@ input[type="submit"]:hover {
     border-radius: 4px;
     cursor: pointer;
     transition: background-color 0.3s;
-    margin-bottom: 10px; /* Add space between rows of buttons */
-    flex: 0 0 30%; /* Each button will be almost half the width of the time-slots container */
-    max-width: 30%; /* Ensure buttons don't grow larger than half-width */
+    margin-bottom: 10px;
+    /* Add space between rows of buttons */
+    flex: 0 0 30%;
+    /* Each button will be almost half the width of the time-slots container */
+    max-width: 30%;
+    /* Ensure buttons don't grow larger than half-width */
 }
+
 
 .time-slot:hover {
     background-color: #5C6BC0;
@@ -281,4 +329,24 @@ input[type="submit"]:hover {
 .time-slot.selected {
     background-color: #5C6BC0;
     color: white;
+}
+
+/* Updated CSS for booked time slots */
+.time-slot.booked,
+.time-slot.booked:hover {
+    background-color: #ccc;
+    /* Grayed out background remains consistent on hover */
+    cursor: not-allowed;
+    /* Shows that the slot isn't selectable */
+    color: #666;
+    text-decoration: line-through;
+    pointer-events: none;
+    /* Prevents click events on the booked slot */
+}
+
+/* Ensure the body can scroll if the content overflows */
+html,
+body {
+    overflow-y: auto;
+    /* Allows scrolling */
 }
