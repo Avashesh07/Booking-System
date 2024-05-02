@@ -16,7 +16,7 @@ body, html {
     background: #fff;
 }
 
-.login-logo {
+img {
     display: block;
     margin: 0 auto;  /* Center the image horizontally */
     height: 100px;    /* Adjust the height as needed */
@@ -31,6 +31,7 @@ p {
 /* Style for the form input fields */
 .input-group input {
     width: calc(100% - 20px);
+    margin: 0 auto;  /* Center the image horizontally */
     padding: 10px;
     margin-top: 8px;
     margin-bottom: 20px;
@@ -43,6 +44,7 @@ p {
 button {
     width: 100%;
     padding: 10px;
+    margin: 0 auto;  /* Center the image horizontally */
     background-color: #0056b3;
     border: none;
     color: white;

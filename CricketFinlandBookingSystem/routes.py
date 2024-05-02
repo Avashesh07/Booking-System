@@ -46,6 +46,30 @@ def init_routes(app):
     def book_form():
         return render_template('book_form.html')
 
+    @app.route('/admin_page')
+    @login_required
+    def admin_page():
+        if current_user.role != 'admin':
+            flash("You do not have permission to view this page.")
+            return redirect(url_for('book_form'))
+        return render_template('admin.html')
+
+    @app.route('/time_slot_page')
+    @login_required
+    def time_slot_page():
+        if current_user.role != 'admin':
+            flash("You do not have permission to view this page.")
+            return redirect(url_for('book_form'))
+        return render_template('time_slot.html')
+
+    @app.route('/signup_page')
+    @login_required
+    def signup_page():
+        if current_user.role != 'admin':
+            flash("You do not have permission to view this page.")
+            return redirect(url_for('book_form'))
+        return render_template('signup.html')
+    
     @app.route('/logout')
     def logout():
         logout_user()
