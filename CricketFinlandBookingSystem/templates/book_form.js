@@ -22,21 +22,19 @@ $(function () {
     fetch('http://localhost:5001/available_dates')
         .then(response => response.json())
         .then(data => {
-            // Update the availableDates array
             availableDates = data.map(date => new Date(date));
-            // Now that we have the available dates, refresh the datepicker
-            $("#datepicker").datepicker('refresh');  // This line refreshes the datepicker
+            // Refresh the datepicker after fetching available dates
+            $("#datepicker").datepicker('refresh');
         })
         .catch(error => console.error('Error fetching available dates:', error));
 
-    // Initialize the datepicker with beforeShowDay function
+    // Initialize the datepicker with beforeShowDay and minDate
     $("#datepicker").datepicker({
         dateFormat: "yy-mm-dd",
+        minDate: new Date(), // This prevents past dates from being selected
         beforeShowDay: function (date) {
             var dateStr = jQuery.datepicker.formatDate('yy-mm-dd', date);
-            var isAvailable = availableDates.some(function (availableDate) {
-                return availableDate.toDateString() === date.toDateString();
-            });
+            var isAvailable = availableDates.some(availableDate => availableDate.toDateString() === date.toDateString());
             console.log(dateStr + ' is ' + (isAvailable ? 'available' : 'not available'));
             return [isAvailable, "", ""];
         },
