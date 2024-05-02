@@ -1,14 +1,55 @@
-from . import db
+from .extensions import db, login_manager
 from datetime import datetime,timedelta
-from flask import request, jsonify
-from .models import Club, Booking, TimeSlotConfig
+from flask import request, jsonify, redirect, url_for, render_template, flash
+from flask_login import current_user, login_user, logout_user, login_required, LoginManager
+from werkzeug.security import generate_password_hash
+from .models import Club, Booking, TimeSlotConfig, User
 
 def init_routes(app):
 
+
+    # Initialize Flask-Login
+    login_manager = LoginManager()
+
+    # User Loader function
+    @login_manager.user_loader
+    def load_user(user_id):
+        return User.query.get(int(user_id))
+    
     @app.route('/')
     def home():
-        return jsonify({'message': 'Welcome to the Booking System API!'})
+        # Redirect to login if not authenticated, otherwise book_form
+        if not current_user.is_authenticated:
+            return redirect(url_for('login'))
+        return redirect(url_for('book_form'))
 
+    @app.route('/login', methods=['GET', 'POST'])
+    def login():
+        if current_user.is_authenticated:
+            return redirect(url_for('book_form'))
+
+        if request.method == 'POST':
+            username = request.form['username']
+            password = request.form['password']
+            user = User.query.filter_by(username=username).first()
+
+            if user and user.check_password(password):
+                login_user(user)
+                next_page = request.args.get('next')
+                return redirect(next_page or url_for('book_form'))
+            else:
+                flash('Invalid username or password')
+        return render_template('login.html')
+
+    @app.route('/book_form')
+    @login_required
+    def book_form():
+        return render_template('book_form.html')
+
+    @app.route('/logout')
+    def logout():
+        logout_user()
+        return redirect(url_for('login'))
 
     @app.route('/admin/add_club', methods=['POST'])
     def add_club():
