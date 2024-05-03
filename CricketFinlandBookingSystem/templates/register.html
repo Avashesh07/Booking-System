@@ -7,6 +7,8 @@
     <script src="https://cdnjs.cloudflare.com/ajax/libs/popper.js/1.16.0/umd/popper.min.js"></script>
     <script src="https://maxcdn.bootstrapcdn.com/bootstrap/4.5.2/js/bootstrap.min.js"></script>
     <script defer src="{{ url_for('static', filename='js/register.js') }}"></script>
+    <link rel="stylesheet" href="{{ url_for('static', filename='css/register.css') }}">
+
 </head>
 <body>
     <div class="nav-bar">
@@ -20,10 +22,10 @@
                         <a class="nav-link" href="{{ url_for('book_form') }}">Home <span class="sr-only">(current)</span></a>
                     </li>
                     {% if current_user.is_authenticated and current_user.role == 'admin' %}
-                    <li class="nav-item active">
+                    <li class="nav-item">
                         <a class="nav-link" href="{{ url_for('time_slot_page') }}">Time Slots</a>
                     </li>
-                    <li class="nav-item">
+                    <li class="nav-item active">
                         <a class="nav-link" href="{{ url_for('register_page') }}">Register</a>
                     </li>
                     {% endif %}
@@ -35,27 +37,34 @@
         </nav>
     </div>
     <!-- Your existing HTML for registration -->
-    <div class="signup-container">
-        <h2>Sign Up</h2>
-        <form id="registerForm" onsubmit="handleSubmit(event)">
-            <div class="input-group">
-                <input type="text" name="username" placeholder="Choose a username" required>
+    <div class="container">
+        <div class="row justify-content-center">
+            <div class="col-md-6">
+                <div class="signup-container">
+                    <h2>Sign Up</h2>
+                    <form id="registerForm" onsubmit="handleSubmit(event)">
+                        <div class="input-group">
+                            <input type="text" name="username" placeholder="Choose a username" required>
+                        </div>
+                        <div class="input-group">
+                            <input type="password" name="password" placeholder="Create a password" required>
+                        </div>
+                        <div class="input-group">
+                            <select name="role" required>
+                                <option value="admin">Admin</option>
+                                <option value="club">Club</option>
+                                <option value="national_team">National Team</option>
+                            </select>
+                        </div>
+                        <div class="input-group">
+                            <input type="email" name="email" placeholder="Enter your email" required>
+                        </div>
+                        <button type="submit" class="btn btn-dark">Register</button>
+                    </form>
+                </div>
             </div>
-            <div class="input-group">
-                <input type="password" name="password" placeholder="Choose a password" required>
-            </div>
-            <div class="input-group">
-                <select name="role" required>
-                    <option value="admin">Admin</option>
-                    <option value="club">Club</option>
-                    <option value="national_team">National Team</option>
-                </select>
-            </div>
-            <input type="email" name="email" placeholder="Enter your email" required>
-            <button type="submit">Register</button>
-        </form>
+        </div>
     </div>
-
     <!-- Modal for registration message -->
     <div class="modal" id="registerModal">
         <div class="modal-dialog">

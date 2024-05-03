@@ -1,3 +1,54 @@
+body {
+    background: #f4f4f4;
+    font-family: "Roboto", sans-serif;
+    margin: 0;
+    padding: 0;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    min-height: 90vh;
+}
+
+.signup-container {
+    background: white;
+    padding: 20px;
+    border-radius: 8px;
+    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+}
+
+h2 {
+    text-align: center;
+    margin-bottom: 20px;
+}
+
+.input-group {
+    margin-bottom: 15px;
+}
+
+input[type="text"],
+input[type="password"],
+input[type="email"],
+select {
+    width: 100%;
+    padding: 10px;
+    border: 1px solid #ccc;
+    border-radius: 4px;
+}
+
+button[type="submit"] {
+    width: 100%;
+    padding: 10px;
+    background-color: #333;
+    color: white;
+    border: none;
+    border-radius: 4px;
+    cursor: pointer;
+}
+
+button[type="submit"]:hover {
+    background-color: #555;
+}
+
 .nav-bar {
     width: 100%; /* Full width */
     background: #fff; /* White background for the navbar */
@@ -33,4 +84,52 @@
 
 .nav-item.log-out {
     margin-left: auto;
+}
+
+
+/* Media Queries */
+@media (max-width: 768px) {
+    .signup-container {
+        padding: 15px;
+        max-width: 100%;
+    }
+
+    .nav-bar {
+        padding: 5px 10px;
+    }
+
+    .input-group input,
+    .input-group select,
+    button[type="submit"] {
+        padding: 8px;
+    }
+
+    .navbar-nav {
+        display: block;
+        text-align: center;
+    }
+
+    .nav-item {
+        margin-bottom: 10px; /* Add space between nav items */
+    }
+}
+
+@media (max-width: 480px) {
+    .navbar-toggler {
+        margin-right: auto; /* Center navbar toggler when navbar collapses */
+    }
+
+    .input-group {
+        margin-bottom: 10px;
+    }
+
+    h2 {
+        font-size: 1.5rem; /* Smaller heading on very small screens */
+    }
+}
+
+@media (min-width: 769px) {
+    .signup-container {
+        margin-top: 80px; /* More space on large screens */
+    }
 }

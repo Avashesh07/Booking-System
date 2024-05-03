@@ -10,7 +10,44 @@ body {
     min-height: 90vh;
 }
 
-.container {
+.nav-bar {
+    width: 100%; /* Full width */
+    background: #fff; /* White background for the navbar */
+    box-shadow: 0 2px 5px rgba(0,0,0,0.1); /* Shadow for some depth */
+    padding: 10px 20px; /* Padding around the content */
+    box-sizing: border-box; /* Includes padding in width calculation */
+    position: fixed; /* Fixed at the top */
+    font-family: 'Futura', sans-serif;
+    font-size: large;
+    font-weight: 400;
+    top: 0;
+    left: 0;
+    z-index: 1000; /* Ensures nav is above other content */
+}
+
+/* Navbar toggler icon */
+.navbar-toggler {
+    border: none;
+    outline: none;
+}
+
+.navbar-toggler-icon {
+    background-image: url("data:image/svg+xml;charset=utf8,%3Csvg viewBox='0 0 30 30' xmlns='http://www.w3.org/2000/svg'%3E%3Cpath stroke='rgba(255, 255, 255, 0.5)' stroke-width='2' stroke-linecap='round' stroke-miterlimit='10' d='M4 7h22M4 15h22M4 23h22'/%3E%3C/svg%3E");
+}
+
+/* Right-aligned 'Log Out' button */
+.navbar-nav {
+    width: 50%;
+    margin: auto;
+    display: flex;
+    justify-content: space-evenly;
+}
+
+.nav-item.log-out {
+    margin-left: auto;
+}
+
+.form-container {
     background: white;
     padding: 30px;
     border-radius: 8px;
@@ -76,7 +113,7 @@ select:focus {
     outline: none;
 }
 
-button {
+.form-actions button{
     padding: 15px;
     background-color: #007bff;
     color: white;
@@ -88,11 +125,11 @@ button {
     margin-top: 30px;
 }
 
-button:hover {
+.form-actions button:hover {
     background-color: #0056b3;
 }
 
-button:active {
+.form-actions button:active {
     transform: scale(0.98);
 }
 
@@ -104,42 +141,6 @@ button:active {
     flex-direction: column;
 }
 
-.nav-bar {
-    width: 100%; /* Full width */
-    background: #fff; /* White background for the navbar */
-    box-shadow: 0 2px 5px rgba(0,0,0,0.1); /* Shadow for some depth */
-    padding: 10px 20px; /* Padding around the content */
-    box-sizing: border-box; /* Includes padding in width calculation */
-    position: fixed; /* Fixed at the top */
-    font-family: 'Futura', sans-serif;
-    font-size: large;
-    font-weight: 400;
-    top: 0;
-    left: 0;
-    z-index: 1000; /* Ensures nav is above other content */
-}
-
-/* Navbar toggler icon */
-.navbar-toggler {
-    border: none;
-    outline: none;
-}
-
-.navbar-toggler-icon {
-    background-image: url("data:image/svg+xml;charset=utf8,%3Csvg viewBox='0 0 30 30' xmlns='http://www.w3.org/2000/svg'%3E%3Cpath stroke='rgba(255, 255, 255, 0.5)' stroke-width='2' stroke-linecap='round' stroke-miterlimit='10' d='M4 7h22M4 15h22M4 23h22'/%3E%3C/svg%3E");
-}
-
-/* Right-aligned 'Log Out' button */
-.navbar-nav {
-    width: 50%;
-    margin: auto;
-    display: flex;
-    justify-content: space-evenly;
-}
-
-.nav-item.log-out {
-    margin-left: auto;
-}
 
 /* Ensure the body can scroll if the content overflows */
 html,
@@ -147,4 +148,57 @@ body {
     overflow-y: auto;
     overflow: auto;
     /* Allows scrolling */
+}
+
+/* Media Queries */
+@media (max-width: 768px) {
+    .container {
+        padding: 15px;
+        max-width: 100%;
+    }
+
+    .nav-bar {
+        padding: 5px 10px;
+    }
+
+    input[type="text"],
+    input[type="password"],
+    input[type="email"],
+    select,
+    button {
+        padding: 8px;
+    }
+
+    .navbar-nav {
+        display: block;
+        text-align: center;
+    }
+
+    .nav-item {
+        margin-bottom: 10px; /* Add space between nav items */
+    }
+
+    h1 {
+        font-size: 20px; /* Smaller heading on very small screens */
+    }
+}
+
+@media (max-width: 480px) {
+    .navbar-toggler {
+        margin-right: auto; /* Center navbar toggler when navbar collapses */
+    }
+
+    .form-group {
+        margin-bottom: 10px;
+    }
+
+    h1 {
+        font-size: 18px; /* Even smaller heading for very small devices */
+    }
+}
+
+@media (min-width: 769px) {
+    .container {
+        margin-top: 80px; /* More space on large screens */
+    }
 }
