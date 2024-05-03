@@ -71,3 +71,10 @@ button:hover {
 .signup-link a:hover {
     text-decoration: underline;
 }
+
+.error {
+    color: red; /* Error message color */
+    font-size: 14px; /* Smaller font size for error messages */
+    text-align: center; /* Center the error message */
+    padding: 5px; /* Padding around the text */
+}

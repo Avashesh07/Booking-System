@@ -1,12 +1,18 @@
-from .extensions import db, login_manager
+from .extensions import db, login_manager, mail
 from datetime import datetime,timedelta
-from flask import request, jsonify, redirect, url_for, render_template, flash
+from flask import request, jsonify, redirect, url_for, render_template, flash, make_response, session
 from flask_login import current_user, login_user, logout_user, login_required, LoginManager
+from flask_mail import Message
 from werkzeug.security import generate_password_hash
 from .models import Club, Booking, TimeSlotConfig, User
 
-def init_routes(app):
 
+def set_password(self, password):
+    self.password_hash = generate_password_hash(password)
+
+
+
+def init_routes(app):
 
     # Initialize Flask-Login
     login_manager = LoginManager()
@@ -25,6 +31,7 @@ def init_routes(app):
 
     @app.route('/login', methods=['GET', 'POST'])
     def login():
+        error_message = ''  # Initialize error_message to ensure it has a value
         if current_user.is_authenticated:
             return redirect(url_for('book_form'))
 
@@ -32,67 +39,106 @@ def init_routes(app):
             username = request.form['username']
             password = request.form['password']
             user = User.query.filter_by(username=username).first()
-
             if user and user.check_password(password):
                 login_user(user)
                 next_page = request.args.get('next')
                 return redirect(next_page or url_for('book_form'))
             else:
-                flash('Invalid username or password')
-        return render_template('login.html')
+                error_message = 'Invalid username or password'
+                return render_template('login.html', error=error_message)
 
+        return render_template('login.html')
+    
+    @app.route('/register', methods=['POST','GET'])
+    def register():
+        if request.method == 'POST':
+            username = request.form['username']
+            password = request.form['password']
+            email = request.form['email']
+            role = request.form['role']
+            existing_user = User.query.filter_by(username=username).first()
+            
+            if not existing_user:
+                user = User(username=username, email=email, role=role)
+                user.set_password(password)
+                db.session.add(user)
+                
+                if role == 'club':
+                    # Also register this username as a new club in the Club table
+                    new_club = Club(name=username)
+                    db.session.add(new_club)
+                
+                db.session.commit()
+                # Prepare and send the email
+                try:
+                    msg = Message("Registration Successful",
+                                sender=app.config['MAIL_DEFAULT_SENDER'],
+                                recipients=[email])
+                    msg.body = f'Hi {username}, you have been successfully registered.  Your password is "{password}" and your username is "{username}". Please use the provided credentials to login.'
+                    mail.send(msg)
+                    response = jsonify({'message': f'Registration successful. Login details sent to {email}.'})
+                    print(response.data)  # This will log the response data
+                    return response, 201
+                except Exception as e:
+                    db.session.rollback()  # Rollback the transaction if email sending fails
+                    return jsonify({'error': str(e)}), 500
+            else:
+                return render_template('register.html')
+
+    @app.route('/register_page')
+    @login_required
+    def register_page():
+        # Redirect to login if not authenticated, otherwise book_form
+        if not current_user.is_authenticated or current_user.role != 'admin':
+            return redirect(url_for('login'))
+        return render_template('register.html')
+            
     @app.route('/book_form')
     @login_required
     def book_form():
-        return render_template('book_form.html')
+        # Redirect to login if not authenticated, otherwise book_form
+        if not current_user.is_authenticated:
+            return redirect(url_for('login'))
+        club_name = None
+        if current_user.role == 'club':
+            club = Club.query.filter_by(name=current_user.username).first()
+            if club:
+                club_name = club.name
+        return render_template('book_form.html', club_name=club_name)
 
     @app.route('/admin_page')
     @login_required
     def admin_page():
-        if current_user.role != 'admin':
-            flash("You do not have permission to view this page.")
-            return redirect(url_for('book_form'))
+        # Redirect to login if not authenticated, otherwise book_form
+        if not current_user.is_authenticated or current_user.role != 'admin':
+            return redirect(url_for('login'))
         return render_template('admin.html')
 
     @app.route('/time_slot_page')
     @login_required
     def time_slot_page():
-        if current_user.role != 'admin':
-            flash("You do not have permission to view this page.")
-            return redirect(url_for('book_form'))
+        # Redirect to login if not authenticated, otherwise book_form
+        if not current_user.is_authenticated or current_user.role != 'admin':
+            return redirect(url_for('login'))
         return render_template('time_slot.html')
 
-    @app.route('/signup_page')
-    @login_required
-    def signup_page():
-        if current_user.role != 'admin':
-            flash("You do not have permission to view this page.")
-            return redirect(url_for('book_form'))
-        return render_template('signup.html')
     
     @app.route('/logout')
     def logout():
-        logout_user()
-        return redirect(url_for('login'))
+        logout_user()  # Flask-Login logout
+        session.clear()  # Clear Flask session
+        response = make_response(redirect(url_for('login')))
+        response.headers["Cache-Control"] = "no-cache, no-store, must-revalidate, max-age=0"
+        response.headers["Pragma"] = "no-cache"
+        response.headers["Expires"] = "0"
+        return response
 
-    @app.route('/admin/add_club', methods=['POST'])
-    def add_club():
-        if 'name' not in request.json:
-            return jsonify({'error': 'Bad request, club name is required'}), 400
+    @app.route('/some_action', methods=['POST'])
+    def some_action():
+        if not current_user.is_authenticated:
+            return render_template('relogin_required.html'), 403
+    
 
-        club_name = request.json['name']
-        existing_club = Club.query.filter_by(name=club_name).first()
-        if existing_club:
-            return jsonify({'error': 'Club already exists'}), 409
-
-        new_club = Club(name=club_name)
-        db.session.add(new_club)
-        try:
-            db.session.commit()
-            return jsonify({'message': f'Club {club_name} added successfully'}), 201
-        except Exception as e:
-            db.session.rollback()
-            return jsonify({'error': str(e)}), 500
 
     @app.route('/clubs', methods=['GET'])
     def get_clubs():
@@ -107,8 +153,9 @@ def init_routes(app):
         # Make sure the time format in the request matches '2024-05-01T10:00:00Z'.
         booking_time = datetime.strptime(booking_data['time'], '%Y-%m-%dT%H:%M:%SZ')
 
-        # Fetch the club using the club name provided in the booking data
-        club = Club.query.filter_by(name=booking_data['club']).first()
+        # If the booking is from a club user and uses names instead of IDs
+        club = Club.query.filter_by(name=booking_data['club_name']).first() if 'club_name' in booking_data else Club.query.get(booking_data['club'])
+
         if not club:
             return jsonify({'error': 'Club not found'}), 404
 
@@ -256,3 +303,10 @@ def init_routes(app):
         db.session.commit()
         return jsonify({'message': f'Cleaned up {deleted_count} old bookings'}), 200
 
+
+    @app.after_request
+    def apply_caching(response):
+        response.headers["Cache-Control"] = "no-store, no-cache, must-revalidate, max-age=0"
+        response.headers["Pragma"] = "no-cache"
+        response.headers["Expires"] = "0"
+        return response

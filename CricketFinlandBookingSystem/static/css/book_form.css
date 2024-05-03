@@ -52,8 +52,10 @@ body {
 
 /* Adjusts content container to not be hidden behind the fixed navbar */
 .content-container {
-    padding-top: 140px; /* Adjust this value based on the height of your navbar */
+    padding-top: 80px; /* Adjust this value based on the height of your navbar */
     width: 100%;
+    margin-top: auto;
+    margin-bottom: auto;
     display: flex;
     justify-content: center;
     flex-direction: column;
@@ -407,6 +409,17 @@ input[type="submit"]:hover {
     /* Prevents click events on the booked slot */
 }
 
+.club-name-container {
+    text-align: center;  /* Centers the text horizontally */
+    width: 100%;        /* Take full width to ensure centering works over the entire container width */
+    margin-top: 5px;   /* Optional: adds some space above the container */
+}
+
+#club_name {
+    font-weight: 600;
+    font-size: 28px;
+    display: inline-block; /* Makes the span center alignable */
+}
 /* Ensure the body can scroll if the content overflows */
 html,
 body {

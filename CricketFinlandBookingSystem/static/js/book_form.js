@@ -1,6 +1,8 @@
 // Global variable to hold available dates
 var availableDates = [];
 
+const currentUserRole = document.body.getAttribute('data-role');
+
 // Fetch the clubs from the server and populate the dropdown list
 document.addEventListener('DOMContentLoaded', (event) => {
     fetch('http://127.0.0.1:5001/clubs')
@@ -124,10 +126,14 @@ document.getElementById('bookingForm').addEventListener('submit', (event) => {
 
     const name = document.getElementById('name').value;
     const email = document.getElementById('email').value;
-    const club = document.getElementById('club');
-    const clubId = club.options[club.selectedIndex].value;
-    const clubName = club.options[club.selectedIndex].text;
 
+    if (currentUserRole === 'club') {
+        clubId = clubName = document.getElementById('club').value;
+    } else {
+        const club = document.getElementById('club');
+        clubId = club.options[club.selectedIndex].value;
+        clubName = club.options[club.selectedIndex].text;
+    }
     // Retrieve the date and time
     const bookingDate = document.getElementById('bookingDate').value;
     const bookingTime = document.getElementById('bookingTime').value;

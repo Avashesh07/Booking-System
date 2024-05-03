@@ -12,6 +12,9 @@
         <p>Sign in to your account</p>
         <form action="/login" method="post">
             <div class="input-group">
+                {% if error %}
+                <p class="error">{{ error }}</p>
+                {% endif %}
                 <input type="text" name="username" placeholder="Username" required>
             </div>
             <div class="input-group">

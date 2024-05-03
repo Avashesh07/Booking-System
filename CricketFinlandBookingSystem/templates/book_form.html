@@ -11,8 +11,7 @@
     <script defer src="https://stackpath.bootstrapcdn.com/bootstrap/4.3.1/js/bootstrap.min.js"></script>
     <script defer src="{{ url_for('static', filename='js/book_form.js') }}"></script>
     <link rel="stylesheet" href="{{ url_for('static', filename='css/book_form.css') }}">
-
-
+    
     <style>
         .background-container {
                 background-image: url("{{ url_for('static', filename='images/kerava.jpeg') }}");
@@ -22,7 +21,7 @@
 
 </head>
 
-<body>
+<body data-role="{{ current_user.role  }}">
     <div class="nav-bar">
         <nav class="navbar navbar-expand-lg navbar-light">
             <button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#navbarNav" aria-controls="navbarNav" aria-expanded="false" aria-label="Toggle navigation">
@@ -35,13 +34,10 @@
                     </li>
                     {% if current_user.is_authenticated and current_user.role == 'admin' %}
                     <li class="nav-item">
-                        <a class="nav-link" href="{{ url_for('admin_page') }}">Admin</a>
-                    </li>
-                    <li class="nav-item">
                         <a class="nav-link" href="{{ url_for('time_slot_page') }}">Time Slots</a>
                     </li>
                     <li class="nav-item">
-                        <a class="nav-link" href="{{ url_for('signup_page') }}">Sign Up</a>
+                        <a class="nav-link" href="{{ url_for('register_page') }}">Register</a>
                     </li>
                     {% endif %}
                     <li class="nav-item">
@@ -60,10 +56,17 @@
                 <div class="user-details">
                     <input type="text" id="name" name="name" placeholder="Full Name" required>
                     <input type="email" id="email" name="email" placeholder="Email" required>
+                    {% if current_user.role == 'club' %}
+                    <input type="hidden" id="club" name="club" value="{{ club_name }}" readonly>
+                    <div class="club-name-container">
+                        <span id="club_name">{{ club_name }}</span>
+                    </div>
+                    {% else %}
                     <select id="club" name="club" required>
                         <option value="" disabled selected>Select a Club</option>
                         <!-- Options will be populated here -->
                     </select>
+                    {% endif %}
                 </div>
 
                 <div class="datetime-picker">
