@@ -126,14 +126,9 @@ document.getElementById('bookingForm').addEventListener('submit', (event) => {
 
     const name = document.getElementById('name').value;
     const email = document.getElementById('email').value;
+    const clubId = document.getElementById('club').value;  // This now works for both roles as the ID is provided in the HTML
+    const clubName = document.getElementById('club_name').innerText; // Fetch the name directly if it's displayed
 
-    if (currentUserRole === 'club') {
-        clubId = clubName = document.getElementById('club').value;
-    } else {
-        const club = document.getElementById('club');
-        clubId = club.options[club.selectedIndex].value;
-        clubName = club.options[club.selectedIndex].text;
-    }
     // Retrieve the date and time
     const bookingDate = document.getElementById('bookingDate').value;
     const bookingTime = document.getElementById('bookingTime').value;

@@ -56,15 +56,17 @@
                 <div class="user-details">
                     <input type="text" id="name" name="name" placeholder="Full Name" required>
                     <input type="email" id="email" name="email" placeholder="Email" required>
-                    {% if current_user.role == 'club' %}
-                    <input type="hidden" id="club" name="club" value="{{ club_name }}" readonly>
+                    {% if current_user.role == 'club' or current_user.role == 'national_team' %}
+                    <input type="hidden" id="club" name="club" value="{{ club_id }}" readonly>
                     <div class="club-name-container">
                         <span id="club_name">{{ club_name }}</span>
                     </div>
                     {% else %}
                     <select id="club" name="club" required>
                         <option value="" disabled selected>Select a Club</option>
-                        <!-- Options will be populated here -->
+                        {% for club in clubs %}
+                        <option value="{{ club.id }}">{{ club.name }}</option>
+                        {% endfor %}
                     </select>
                     {% endif %}
                 </div>

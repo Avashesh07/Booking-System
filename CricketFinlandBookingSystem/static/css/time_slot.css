@@ -8,100 +8,7 @@ body {
     justify-content: center;
     align-items: center;
     min-height: 90vh;
-}
-
-.container {
-    background: white;
-    padding: 30px;
-    border-radius: 8px;
-    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
-    width: 100%;
-    max-width: 350px;
-}
-
-.background-container {
-    position: fixed; /* Fixed position to cover the entire viewport */
-    top: 0;
-    left: 0;
-    width: 100vw; /* Full viewport width */
-    height: 100vh; /* Full viewport height */
-    background-size: cover;
-    background-position: center;
-    filter: blur(3px); /* Apply a blur effect */
-    z-index: -1; /* Places the background behind all other content */
-}
-
-.content-container {
-    padding-top: 60px;
-}
-
-h1 {
-    font-size: 24px;
-    color: #333;
-    text-align: center;
-    margin-bottom: 30px;
-}
-
-.form-group {
-    display: flex;
-    flex-direction: column;
-    margin-bottom: 20px;
-}
-
-label {
-    font-weight: bold;
-    margin-bottom: 10px;
-}
-
-input[type="time"],
-input[type="number"],
-input[type="date"],
-select {
-    padding: 10px;
-    margin-bottom: 20px;
-    border-radius: 4px;
-    border: 1px solid #ccc;
-    font-size: 16px;
-}
-
-input[type="date"] {
-    cursor: pointer;
-}
-
-input[type="time"]:focus,
-input[type="number"]:focus,
-input[type="date"]:focus,
-select:focus {
-    border-color: #007bff;
-    outline: none;
-}
-
-button {
-    padding: 15px;
-    background-color: #007bff;
-    color: white;
-    border: none;
-    border-radius: 50px;
-    cursor: pointer;
-    font-size: 16px;
-    text-transform: uppercase;
-    margin-top: 30px;
-}
-
-button:hover {
-    background-color: #0056b3;
-}
-
-button:active {
-    transform: scale(0.98);
-}
-
-/* Additional styles for alignment and spacing */
-.form-actions {
-    display: flex;
-    justify-content: center;
-    align-items: center;
-    flex-direction: column;
+    color: #1f199d;
 }
 
 .nav-bar {
@@ -141,10 +48,172 @@ button:active {
     margin-left: auto;
 }
 
+.form-container {
+    background: white;
+    margin-left: auto;
+    margin-right: auto;
+    padding: 40px;
+    border-radius: 12px;
+    box-shadow: 0 4px 20px rgba(0, 0, 0, 0.05);
+    max-width: 400px;
+    width: 100%;
+}
+
+.background-container {
+    position: fixed; /* Fixed position to cover the entire viewport */
+    top: 0;
+    left: 0;
+    width: 100vw; /* Full viewport width */
+    height: 100vh; /* Full viewport height */
+    background-size: cover;
+    background-position: center;
+    filter: blur(3px); /* Apply a blur effect */
+    z-index: -1; /* Places the background behind all other content */
+}
+
+.content-container {
+    padding-top: 120px;
+    width: 100%;
+    max-width: 960px;
+    margin: auto;
+}
+
+
+h1 {
+    font-size: 28px;
+    text-align: center;
+    margin-bottom: 40px;
+}
+
+.form-group {
+    margin-bottom: 30px;
+}
+
+label {
+    font-weight: normal;
+    margin-bottom: 10px;
+    color: #666;
+}
+
+input[type="time"],
+input[type="number"],
+input[type="date"],
+select {
+    padding: 12px;
+    margin-bottom: 20px;
+    border-radius: 8px;
+    border: 1px solid #ddd;
+    font-size: 16px;
+    background: #fff;
+    width: 100%;
+}
+
+input[type="date"] {
+    cursor: pointer;
+}
+
+input[type="time"]:focus,
+input[type="number"]:focus,
+input[type="date"]:focus,
+select:focus {
+    border-color: #0056b3;
+    outline: none;
+}
+
+
+.form-actions button {
+    width: 50%;
+    text-align: center;
+    display: block;
+    padding: 15px;
+    border-radius: 30px;
+    margin-left: auto;
+    margin-right: auto;
+    border: none;
+    color: white;
+    background-color: #1f199d;;
+    cursor: pointer;
+    box-shadow: 0 4px 6px rgba(0.1, 0, 0, 0.1);
+}
+
+
+
+.form-actions button:hover {
+
+    background-color: #120e5f;
+
+}
+
+.form-actions button:active {
+    transform: scale(0.98);
+}
+
+/* Additional styles for alignment and spacing */
+.form-actions {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    flex-direction: column;
+}
+
+
 /* Ensure the body can scroll if the content overflows */
 html,
 body {
     overflow-y: auto;
     overflow: auto;
     /* Allows scrolling */
+}
+
+/* Media Queries */
+@media (max-width: 768px) {
+    .container {
+        padding: 15px;
+        max-width: 100%;
+    }
+
+    .nav-bar {
+        padding: 5px 10px;
+    }
+
+    input[type="text"],
+    input[type="password"],
+    input[type="email"],
+    select,
+    button {
+        padding: 8px;
+    }
+
+    .navbar-nav {
+        display: block;
+        text-align: center;
+    }
+
+    .nav-item {
+        margin-bottom: 10px; /* Add space between nav items */
+    }
+
+    h1 {
+        font-size: 20px; /* Smaller heading on very small screens */
+    }
+}
+
+@media (max-width: 480px) {
+    .navbar-toggler {
+        margin-right: auto; /* Center navbar toggler when navbar collapses */
+    }
+
+    .form-group {
+        margin-bottom: 10px;
+    }
+
+    h1 {
+        font-size: 18px; /* Even smaller heading for very small devices */
+    }
+}
+
+@media (min-width: 769px) {
+    .container {
+        margin-top: 80px; /* More space on large screens */
+    }
 }

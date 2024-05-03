@@ -5,9 +5,12 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Configure Time Slots</title>
+    <script src="https://code.jquery.com/jquery-3.5.1.slim.min.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/@popperjs/core@2/dist/umd/popper.min.js"></script>
+    <script src="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/js/bootstrap.min.js"></script>
+    <script defer src="{{ url_for('static', filename='js/time_slot.js') }}"></script>
     <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.3.1/css/bootstrap.min.css">
     <link rel="stylesheet" href="{{ url_for('static', filename='css/time_slot.css') }}">
-    <script defer src="{{ url_for('static', filename='js/time_slot.js') }}"></script>
 
     <style>
 
@@ -30,8 +33,8 @@
                         <a class="nav-link" href="{{ url_for('book_form') }}">Home <span class="sr-only">(current)</span></a>
                     </li>
                     {% if current_user.is_authenticated and current_user.role == 'admin' %}
-                    <li class="nav-item active">
-                        <a class="nav-link" href="{{ url_for('time_slot_page') }}">Time Slots</a>
+                    <li class="nav-item">
+                        <a class="nav-link active" href="{{ url_for('time_slot_page') }}">Time Slots</a>
                     </li>
                     <li class="nav-item">
                         <a class="nav-link" href="{{ url_for('register_page') }}">Register</a>
@@ -46,7 +49,7 @@
     </div>
     <div class="background-container"></div>
     <div class="content-container">
-        <div class="container">
+        <div class="form-container">
             <h1>Availability Manager</h1>
             <form id="timeSlotConfigForm">
                 <div>
