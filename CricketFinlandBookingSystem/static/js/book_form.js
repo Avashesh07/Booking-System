@@ -21,7 +21,7 @@ document.addEventListener('DOMContentLoaded', (event) => {
 
 $(function () {
     // Fetch the available dates from the server and store them
-    fetch('http://localhost:5001/available_dates')
+    fetch('http://127.0.0.1:5001/available_dates')
         .then(response => response.json())
         .then(data => {
             availableDates = data.map(date => new Date(date));
@@ -47,7 +47,7 @@ $(function () {
     });
 
     function fetchTimeSlots(date) {
-        fetch(`http://localhost:5001/available_slots?date=${date}`)
+        fetch(`http://127.0.0.1:5001/available_slots?date=${date}`)
             .then(response => {
                 if (!response.ok) {
                     throw new Error('No time slots available for the selected date');
@@ -143,12 +143,13 @@ document.getElementById('bookingForm').addEventListener('submit', (event) => {
 
 
 
-    fetch('http://localhost:5001/book', {
+    fetch('http://127.0.0.1:5001/book', {
         method: 'POST',
         headers: {
             'Content-Type': 'application/json',
         },
         body: JSON.stringify(data),
+        credentials: 'include' 
     })
 
         .then(response => {

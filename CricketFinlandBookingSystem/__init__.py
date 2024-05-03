@@ -13,10 +13,11 @@ def create_app():
     load_dotenv() 
 
     app = Flask(__name__)
-    CORS(app, resources={r"/*": {"origins": "*"}})
+    CORS(app, resources={r"/*": {"origins": "*"}},supports_credentials=True )
     app.config['SQLALCHEMY_DATABASE_URI'] = 'sqlite:///./bookings.db'
     app.config['SQLALCHEMY_TRACK_MODIFICATIONS'] = False
     app.config['SECRET_KEY'] = 'bookingpage'
+
 
     # Configuration for Flask-Mail
     app.config['MAIL_SERVER'] = 'smtp-mail.outlook.com'  # Use your SMTP server
@@ -30,7 +31,7 @@ def create_app():
     mail.init_app(app)
     db.init_app(app)
     login_manager.init_app(app)
-    
+
     login_manager.login_view = 'login'
 
     @login_manager.user_loader

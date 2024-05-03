@@ -15,7 +15,7 @@ def set_password(self, password):
 def init_routes(app):
 
     # Initialize Flask-Login
-    login_manager = LoginManager()
+    login_manager.init_app(app)
 
     # User Loader function
     @login_manager.user_loader
@@ -120,47 +120,9 @@ def init_routes(app):
             return redirect(url_for('login'))
         return render_template('book_form.html', club_id=club_id, club_name=club_name)
 
-    @app.route('/admin_page')
-    @login_required
-    def admin_page():
-        # Redirect to login if not authenticated, otherwise book_form
-        if not current_user.is_authenticated or current_user.role != 'admin':
-            return redirect(url_for('login'))
-        return render_template('admin.html')
-
-    @app.route('/time_slot_page')
-    @login_required
-    def time_slot_page():
-        # Redirect to login if not authenticated, otherwise book_form
-        if not current_user.is_authenticated or current_user.role != 'admin':
-            return redirect(url_for('login'))
-        return render_template('time_slot.html')
-
-    
-    @app.route('/logout')
-    def logout():
-        logout_user()  # Flask-Login logout
-        session.clear()  # Clear Flask session
-        response = make_response(redirect(url_for('login')))
-        response.headers["Cache-Control"] = "no-cache, no-store, must-revalidate, max-age=0"
-        response.headers["Pragma"] = "no-cache"
-        response.headers["Expires"] = "0"
-        return response
-
-    @app.route('/some_action', methods=['POST'])
-    def some_action():
-        if not current_user.is_authenticated:
-            return render_template('relogin_required.html'), 403
-    
-
-
-    @app.route('/clubs', methods=['GET'])
-    def get_clubs():
-        clubs = Club.query.all()
-        return jsonify([club.name for club in clubs]), 200
-
     @app.route('/book', methods=['POST'])
     def book():
+        print(current_user.is_authenticated)
         booking_data = request.json
 
         # Converting the time from string to a datetime object.
@@ -192,6 +154,16 @@ def init_routes(app):
                 current_club_bookings = Booking.query.filter_by(club_id=club.id).count()
                 if current_club_bookings >= 3:
                     return jsonify({'error': 'Maximum of 3 active bookings allowed'}), 400
+            
+            elif current_user.role == 'national_team':
+                # Constraint: Booking not more than 4 weeks in advance
+                if booking_time > datetime.now() + timedelta(weeks=4):
+                    return jsonify({'error': 'Booking cannot be more than four weeks in advance'}), 400
+
+                # Constraint: No more than 9 active bookings
+                current_club_bookings = Booking.query.filter_by(club_id=club.id).count()
+                if current_club_bookings >= 18:
+                    return jsonify({'error': 'Maximum of 18 active bookings allowed'}), 400
 
         # Create a new Booking instance
         new_booking = Booking(name=booking_data['name'], club_id=club.id, club_name=club.name, time=booking_time)
@@ -209,6 +181,42 @@ def init_routes(app):
             db.session.rollback()
             return jsonify({'error': str(e)}), 500
 
+
+    @app.route('/admin_page')
+    @login_required
+    def admin_page():
+        # Redirect to login if not authenticated, otherwise book_form
+        if not current_user.is_authenticated or current_user.role != 'admin':
+            return redirect(url_for('login'))
+        return render_template('admin.html')
+
+    @app.route('/time_slot_page')
+    @login_required
+    def time_slot_page():
+        # Redirect to login if not authenticated, otherwise book_form
+        if not current_user.is_authenticated or current_user.role != 'admin':
+            return redirect(url_for('login'))
+        return render_template('time_slot.html')
+
+    
+    @app.route('/logout')
+    def logout():
+        logout_user()  # Flask-Login logout
+        session.clear()  # Clear Flask session
+        response = make_response(redirect(url_for('login')))
+        response.headers["Cache-Control"] = "no-cache, no-store, must-revalidate, max-age=0"
+        response.headers["Pragma"] = "no-cache"
+        response.headers["Expires"] = "0"
+        return response
+
+
+
+    @app.route('/clubs', methods=['GET'])
+    def get_clubs():
+        clubs = Club.query.all()
+        return jsonify([club.name for club in clubs]), 200
+
+   
 
     @app.route('/add_time_slot_config', methods=['POST'])
     def add_time_slot_config():
