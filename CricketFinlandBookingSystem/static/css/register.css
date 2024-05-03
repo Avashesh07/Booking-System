@@ -1,0 +1,36 @@
+.nav-bar {
+    width: 100%; /* Full width */
+    background: #fff; /* White background for the navbar */
+    box-shadow: 0 2px 5px rgba(0,0,0,0.1); /* Shadow for some depth */
+    padding: 10px 20px; /* Padding around the content */
+    box-sizing: border-box; /* Includes padding in width calculation */
+    position: fixed; /* Fixed at the top */
+    font-family: 'Futura', sans-serif;
+    font-size: large;
+    font-weight: 400;
+    top: 0;
+    left: 0;
+    z-index: 1000; /* Ensures nav is above other content */
+}
+
+/* Navbar toggler icon */
+.navbar-toggler {
+    border: none;
+    outline: none;
+}
+
+.navbar-toggler-icon {
+    background-image: url("data:image/svg+xml;charset=utf8,%3Csvg viewBox='0 0 30 30' xmlns='http://www.w3.org/2000/svg'%3E%3Cpath stroke='rgba(255, 255, 255, 0.5)' stroke-width='2' stroke-linecap='round' stroke-miterlimit='10' d='M4 7h22M4 15h22M4 23h22'/%3E%3C/svg%3E");
+}
+
+/* Right-aligned 'Log Out' button */
+.navbar-nav {
+    width: 50%;
+    margin: auto;
+    display: flex;
+    justify-content: space-evenly;
+}
+
+.nav-item.log-out {
+    margin-left: auto;
+}
