@@ -14,7 +14,7 @@ def create_app():
 
     app = Flask(__name__)
     CORS(app, resources={r"/*": {"origins": "*"}},supports_credentials=True )
-    app.config['SQLALCHEMY_DATABASE_URI'] = 'sqlite:///./bookings.db'
+    app.config['SQLALCHEMY_DATABASE_URI'] = os.getenv('DATABASE_URL')
     app.config['SQLALCHEMY_TRACK_MODIFICATIONS'] = False
     app.config['SECRET_KEY'] = 'bookingpage'
 
