@@ -67,6 +67,10 @@ def init_routes(app):
                     # Also register this username as a new club in the Club table
                     new_club = Club(name=username)
                     db.session.add(new_club)
+
+                elif role == 'national_team':
+                    new_club = Club(name='National Team')
+                    db.session.add(new_club)
                 
                 db.session.commit()
                 # Prepare and send the email
@@ -96,15 +100,25 @@ def init_routes(app):
     @app.route('/book_form')
     @login_required
     def book_form():
-        # Redirect to login if not authenticated, otherwise book_form
+        club_id = None
+        club_name = None
+
+        if current_user.is_authenticated:
+            if current_user.role == 'club' or current_user.role == 'national_team':
+                if current_user.role == 'national_team':
+                    # Assuming 'National Team' is the name in the database
+                    club = Club.query.filter_by(name="National Team").first()
+                else:
+                    # For regular clubs, you might use the username or another attribute
+                    club = Club.query.filter_by(name=current_user.username).first()
+                
+                if club:
+                    club_id = club.id
+                    club_name = club.name
+
         if not current_user.is_authenticated:
             return redirect(url_for('login'))
-        club_name = None
-        if current_user.role == 'club':
-            club = Club.query.filter_by(name=current_user.username).first()
-            if club:
-                club_name = club.name
-        return render_template('book_form.html', club_name=club_name)
+        return render_template('book_form.html', club_id=club_id, club_name=club_name)
 
     @app.route('/admin_page')
     @login_required
@@ -168,15 +182,16 @@ def init_routes(app):
         if overlapping_bookings > 0:
             return jsonify({'error': 'This time slot is already booked'}), 400
 
+        if current_user.is_authenticated:
+            if current_user.role == 'club':
+                # Constraint: Booking not more than 2 weeks in advance
+                if booking_time > datetime.now() + timedelta(weeks=2):
+                    return jsonify({'error': 'Booking cannot be more than two weeks in advance'}), 400
 
-        # Constraint: Booking not more than 2 weeks in advance
-        if booking_time > datetime.now() + timedelta(weeks=2):
-            return jsonify({'error': 'Booking cannot be more than two weeks in advance'}), 400
-
-        # Constraint: No more than 3 active bookings
-        current_club_bookings = Booking.query.filter_by(club_id=club.id).count()
-        if current_club_bookings >= 3:
-            return jsonify({'error': 'Maximum of 3 active bookings allowed'}), 400
+                # Constraint: No more than 3 active bookings
+                current_club_bookings = Booking.query.filter_by(club_id=club.id).count()
+                if current_club_bookings >= 3:
+                    return jsonify({'error': 'Maximum of 3 active bookings allowed'}), 400
 
         # Create a new Booking instance
         new_booking = Booking(name=booking_data['name'], club_id=club.id, club_name=club.name, time=booking_time)
