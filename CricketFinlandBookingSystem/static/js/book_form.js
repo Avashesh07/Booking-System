@@ -5,7 +5,7 @@ const currentUserRole = document.body.getAttribute('data-role');
 
 // Fetch the clubs from the server and populate the dropdown list
 document.addEventListener('DOMContentLoaded', (event) => {
-    fetch('http://127.0.0.1:5001/clubs')
+    fetch('https://booking-system-smoky.vercel.app/clubs')
         .then(response => response.json())
         .then(data => {
             const clubSelect = document.getElementById('club');
@@ -21,7 +21,7 @@ document.addEventListener('DOMContentLoaded', (event) => {
 
 $(function () {
     // Fetch the available dates from the server and store them
-    fetch('http://127.0.0.1:5001/available_dates')
+    fetch('https://booking-system-smoky.vercel.app/available_dates')
         .then(response => response.json())
         .then(data => {
             availableDates = data.map(date => new Date(date));
@@ -47,7 +47,7 @@ $(function () {
     });
 
     function fetchTimeSlots(date) {
-        fetch(`http://127.0.0.1:5001/available_slots?date=${date}`)
+        fetch(`https://booking-system-smoky.vercel.app/available_slots?date=${date}`)
             .then(response => {
                 if (!response.ok) {
                     throw new Error('No time slots available for the selected date');
@@ -143,7 +143,7 @@ document.getElementById('bookingForm').addEventListener('submit', (event) => {
 
 
 
-    fetch('http://127.0.0.1:5001/book', {
+    fetch('https://booking-system-smoky.vercel.app/book', {
         method: 'POST',
         headers: {
             'Content-Type': 'application/json',
