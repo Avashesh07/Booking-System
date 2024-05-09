@@ -27,7 +27,7 @@ class User(db.Model):
 def create_admin():
     with app.app_context():
         username = 'admin'
-        password = 'cricketfinland23'  # Use a strong, unique password for production
+        password = 'cf23'  # Use a strong, unique password for production
         email = 'tdk.avashesh@yahoo.com'
         role = 'admin'
 
