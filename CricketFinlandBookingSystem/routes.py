@@ -170,17 +170,20 @@ def init_routes(app):
 
         db.session.add(new_booking)
 
-        try:
-            db.session.commit()
-            formatted_time = new_booking.time.strftime('%Y-%m-%d %H:%M:%S')
-            return jsonify({'message': 'Booking successful', 'data': booking_data, 'formatted_time': formatted_time}), 201
-        
-        except Exception as e:
-            # For production use, it's not a good idea to expose the exception message.
-            # This is just for debugging.
-            db.session.rollback()
-            return jsonify({'error': str(e)}), 500
-
+        if new_booking:
+            try:
+                db.session.commit()
+                formatted_time = new_booking.time.strftime('%Y-%m-%d %H:%M:%S')
+                # Send confirmation email
+                msg = Message("Booking Confirmation",
+                            sender=app.config['MAIL_DEFAULT_SENDER'],
+                            recipients=[booking_data['email']])
+                msg.body = f"Dear {booking_data['name']}, your booking for {club.name} on {formatted_time} has been confirmed."
+                mail.send(msg)
+                return jsonify({'message': 'Booking successful', 'data': booking_data, 'formatted_time': formatted_time}), 201
+            except Exception as e:
+                db.session.rollback()
+                return jsonify({'error': str(e)}), 500
 
     @app.route('/admin_page')
     @login_required
@@ -249,9 +252,21 @@ def init_routes(app):
             dateRangeEnd=date_range_end
         )
         db.session.add(new_config)
-        db.session.commit()
-        return jsonify({'message': 'Time slot configuration added successfully'}), 201
-
+        if new_config:
+            try:
+                db.session.commit()
+                # Fetch all user emails
+                users = User.query.with_entities(User.email).all()
+                email_list = [user.email for user in users]
+                msg = Message("New Availability Added",
+                            sender=app.config['MAIL_DEFAULT_SENDER'],
+                            recipients=email_list)
+                msg.body = "New time slots have been added, check them out on our website!"
+                mail.send(msg)
+                return jsonify({'message': 'Time slot configuration added successfully'}), 201
+            except Exception as e:
+                db.session.rollback()
+                return jsonify({'error': str(e)}), 500
 
     @app.route('/available_slots', methods=['GET'])
     def available_slots():
