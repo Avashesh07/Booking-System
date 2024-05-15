@@ -53,7 +53,7 @@ body {
 /* Adjusts content container to not be hidden behind the fixed navbar */
 .content-container {
     padding-top: 80px; /* Adjust this value based on the height of your navbar */
-    max-width: 40%;
+    width: 100%;
     margin-top: auto;
     margin-bottom: auto;
     display: flex;
@@ -138,8 +138,7 @@ input[type="datetime-local"] {
 
 
 input[type="submit"] {
-    width:30%;
-    max-width: 50%;
+    width: 40%;
     text-align: center;
     display: block;
     padding: 15px;
@@ -366,8 +365,6 @@ input[type="submit"]:hover {
 .time-slots {
     display: flex;
     flex-wrap: wrap;
-    margin-left:auto;
-    margin-right:auto;
     justify-content: center;
     gap: 10px;
     /* Add space between buttons */
@@ -384,6 +381,7 @@ input[type="submit"]:hover {
     /* Add space between rows of buttons */
     flex: 0 0 30%;
     /* Each button will be almost half the width of the time-slots container */
+    max-width: 30%;
     /* Ensure buttons don't grow larger than half-width */
 }
 
@@ -414,8 +412,7 @@ input[type="submit"]:hover {
 
 /* Admin-specific styles for booked slots */
 .time-slot.admin-booked {
-    width: 30%;
-    height:auto;
+    max-width: 30%;
     background-color: red; /* Different background for admin */
     cursor: pointer; /* Allows clicking */
     text-decoration: none; /* No line-through */
@@ -441,6 +438,5 @@ body {
     overflow-y: auto;
     /* Allows scrolling */
 }
-
 
 
