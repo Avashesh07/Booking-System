@@ -2,7 +2,8 @@
 body, html {
     margin: 0;
     padding: 0;
-    height: 100%;
+    min-height: 90vh;
+    min-width: 90vw;
     font-family: 'Roboto', sans-serif;
     display: flex;
     justify-content: center;
@@ -12,7 +13,7 @@ body, html {
 /* Centering the login form in the middle of the page */
 .login-container {
     width: 100%;
-    max-width: 400px;
+    max-width: 500px;
     padding: 20px;
     box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
     background: #fff;
@@ -46,13 +47,14 @@ p {
 button {
     width: 100%;
     padding: 10px;
-    margin: 0 auto;  /* Center the image horizontally */
+    margin-left: auto;
+    margin-right: auto;
     background-color: #0056b3;
     border: none;
     color: white;
     font-size: 16px;
     cursor: pointer;
-    border-radius: 5px;
+    border-radius: 20px;
 }
 
 button:hover {

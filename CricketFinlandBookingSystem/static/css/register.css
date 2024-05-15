@@ -1,6 +1,6 @@
 body {
-    background: #f4f4f4;
-    font-family: "Roboto", sans-serif;
+    font-family: 'Roboto', sans-serif;
+    background-color: #f4f4f4;
     margin: 0;
     padding: 0;
     display: flex;
@@ -10,11 +10,49 @@ body {
     color: #1f199d;
 }
 
-.container {
+.nav-bar {
+    width: 100%; /* Full width */
+    background: #fff; /* White background for the navbar */
+    box-shadow: 0 2px 5px rgba(0,0,0,0.1); /* Shadow for some depth */
+    padding: 10px 20px; /* Padding around the content */
+    box-sizing: border-box; /* Includes padding in width calculation */
+    position: fixed; /* Fixed at the top */
+    font-family: 'Futura', sans-serif;
+    font-size: large;
+    font-weight: 400;
+    top: 0;
+    left: 0;
+    z-index: 1000; /* Ensures nav is above other content */
+}
+
+/* Navbar toggler icon */
+.navbar-toggler {
+    border: none;
+    outline: none;
+}
+
+.navbar-toggler-icon {
+    background-image: url("data:image/svg+xml;charset=utf8,%3Csvg viewBox='0 0 30 30' xmlns='http://www.w3.org/2000/svg'%3E%3Cpath stroke='rgba(255, 255, 255, 0.5)' stroke-width='2' stroke-linecap='round' stroke-miterlimit='10' d='M4 7h22M4 15h22M4 23h22'/%3E%3C/svg%3E");
+}
+
+/* Right-aligned 'Log Out' button */
+.navbar-nav {
+    width: 50%;
+    margin: auto;
+    display: flex;
+    justify-content: space-evenly;
+}
+
+.nav-item.log-out {
+    margin-left: auto;
+}
+
+
+.container-container {
     padding-top: 90px;
     padding-bottom: 20px;
-    width:70%;
-}
+    width:80%;
+} 
 
 .background-container {
     position: fixed; /* Fixed position to cover the entire viewport */
@@ -75,86 +113,46 @@ button[type="submit"]:hover {
 }
 
 
-.nav-bar {
-    width: 100%; /* Full width */
-    background: #fff; /* White background for the navbar */
-    box-shadow: 0 2px 5px rgba(0,0,0,0.1); /* Shadow for some depth */
-    padding: 10px 20px; /* Padding around the content */
-    box-sizing: border-box; /* Includes padding in width calculation */
-    position: fixed; /* Fixed at the top */
-    font-family: 'Futura', sans-serif;
-    font-size: large;
-    font-weight: 400;
-    top: 0;
-    left: 0;
-    z-index: 1000; /* Ensures nav is above other content */
-}
-
-/* Navbar toggler icon */
-.navbar-toggler {
-    border: none;
-    outline: none;
-}
-
-.navbar-toggler-icon {
-    background-image: url("data:image/svg+xml;charset=utf8,%3Csvg viewBox='0 0 30 30' xmlns='http://www.w3.org/2000/svg'%3E%3Cpath stroke='rgba(255, 255, 255, 0.5)' stroke-width='2' stroke-linecap='round' stroke-miterlimit='10' d='M4 7h22M4 15h22M4 23h22'/%3E%3C/svg%3E");
-}
-
-/* Right-aligned 'Log Out' button */
-.navbar-nav {
-    width: 50%;
-    margin: auto;
-    display: flex;
-    justify-content: space-evenly;
-}
-
-.nav-item.log-out {
-    margin-left: auto;
-}
 
 /* Media Queries */
 @media (max-width: 768px) {
     .container {
-        padding-top: 70px;
-        width: 90%;
+        padding: 15px;
+        max-width: 100%;
     }
 
     .nav-bar {
         padding: 5px 10px;
     }
 
-    .signup-container {
-        padding: 15px;
+
+    .navbar-nav {
+        display: block;
+        text-align: center;
     }
 
-    .input-group input,
-    .input-group select,
-    button[type="submit"] {
-        padding: 8px;
+    .nav-item {
+        margin-bottom: 10px; /* Add space between nav items */
     }
 
-    button[type="submit"] {
-        width: 70%;
-    }
 }
 
 @media (max-width: 480px) {
+    .navbar-toggler {
+        margin-right: auto; /* Center navbar toggler when navbar collapses */
+    }
+
+    .form-group {
+        margin-bottom: 10px;
+    }
+
+    h1 {
+        font-size: 18px; /* Even smaller heading for very small devices */
+    }
+}
+
+@media (min-width: 769px) {
     .container {
-        padding-top: 60px;
-        width: 95%;
-    }
-
-    .signup-container {
-        padding: 10px;
-    }
-
-    .input-group input,
-    .input-group select,
-    button[type="submit"] {
-        padding: 6px;
-    }
-
-    button[type="submit"] {
-        width: 90%;
+        margin-top: 80px; /* More space on large screens */
     }
 }
