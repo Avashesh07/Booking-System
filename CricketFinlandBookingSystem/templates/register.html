@@ -47,31 +47,27 @@
     <!-- Your existing HTML for registration -->
     <div class="background-container"></div>
     <div class="container">
-        <div class="row justify-content-center">
-            <div class="col-md-6">
-                <div class="signup-container">
-                    <h2>Register a User</h2>
-                    <form id="registerForm" onsubmit="handleSubmit(event)">
-                        <div class="input-group">
-                            <input type="text" name="username" placeholder="Choose a username" required>
-                        </div>
-                        <div class="input-group">
-                            <input type="password" name="password" placeholder="Create a password" required>
-                        </div>
-                        <div class="input-group">
-                            <select name="role" required>
-                                <option value="admin">Admin</option>
-                                <option value="club">Club</option>
-                                <option value="national_team">National Team</option>
-                            </select>
-                        </div>
-                        <div class="input-group">
-                            <input type="email" name="email" placeholder="Enter your email" required>
-                        </div>
-                        <button type="submit" class="btn btn-dark">Register</button>
-                    </form>
+        <div class="signup-container">
+            <h2>Register a User</h2>
+            <form id="registerForm" onsubmit="handleSubmit(event)">
+                <div class="input-group">
+                    <input type="text" name="username" placeholder="Choose a username" required>
                 </div>
-            </div>
+                <div class="input-group">
+                    <input type="password" name="password" placeholder="Create a password" required>
+                </div>
+                <div class="input-group">
+                    <select name="role" required>
+                        <option value="admin">Admin</option>
+                        <option value="club">Club</option>
+                        <option value="national_team">National Team</option>
+                    </select>
+                </div>
+                <div class="input-group">
+                    <input type="email" name="email" placeholder="Enter your email" required>
+                </div>
+                <button type="submit" class="btn btn-dark">Register</button>
+            </form>
         </div>
     </div>
     <!-- Modal for registration message -->

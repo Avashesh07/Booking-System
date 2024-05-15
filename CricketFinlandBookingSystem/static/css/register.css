@@ -10,6 +10,12 @@ body {
     color: #1f199d;
 }
 
+.container {
+    padding-top: 90px;
+    padding-bottom: 20px;
+    width:70%;
+}
+
 .background-container {
     position: fixed; /* Fixed position to cover the entire viewport */
     top: 0;
@@ -49,7 +55,7 @@ select {
 }
 
 button[type="submit"] {
-    width: 50%;
+    width: 30%;
     text-align: center;
     display: block;
     padding: 15px;
@@ -106,16 +112,19 @@ button[type="submit"]:hover {
     margin-left: auto;
 }
 
-
 /* Media Queries */
 @media (max-width: 768px) {
-    .signup-container {
-        padding: 15px;
-        max-width: 100%;
+    .container {
+        padding-top: 70px;
+        width: 90%;
     }
 
     .nav-bar {
         padding: 5px 10px;
+    }
+
+    .signup-container {
+        padding: 15px;
     }
 
     .input-group input,
@@ -124,32 +133,28 @@ button[type="submit"]:hover {
         padding: 8px;
     }
 
-    .navbar-nav {
-        display: block;
-        text-align: center;
-    }
-
-    .nav-item {
-        margin-bottom: 10px; /* Add space between nav items */
+    button[type="submit"] {
+        width: 70%;
     }
 }
 
 @media (max-width: 480px) {
-    .navbar-toggler {
-        margin-right: auto; /* Center navbar toggler when navbar collapses */
+    .container {
+        padding-top: 60px;
+        width: 95%;
     }
 
-    .input-group {
-        margin-bottom: 10px;
-    }
-
-    h2 {
-        font-size: 1.5rem; /* Smaller heading on very small screens */
-    }
-}
-
-@media (min-width: 769px) {
     .signup-container {
-        margin-top: 80px; /* More space on large screens */
+        padding: 10px;
+    }
+
+    .input-group input,
+    .input-group select,
+    button[type="submit"] {
+        padding: 6px;
+    }
+
+    button[type="submit"] {
+        width: 90%;
     }
 }
