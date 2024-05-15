@@ -60,7 +60,7 @@ $(function () {
     }
     
     function deleteBooking(bookingId) {
-        fetch(`http://127.0.0.1:5001/delete_booking`, {
+        fetch(`https://booking-system-smoky.vercel.app/delete_booking`, {
             method: 'POST',
             headers: { 'Content-Type': 'application/json' },
             body: JSON.stringify({ booking_id: bookingId })
