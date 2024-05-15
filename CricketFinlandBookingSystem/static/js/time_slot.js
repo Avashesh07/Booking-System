@@ -43,7 +43,7 @@ document.getElementById('timeSlotConfigForm').addEventListener('submit', functio
     };
 
     // Send the time range object to the server
-    fetch('http://localhost:5001/add_time_slot_config', {
+    fetch('https://booking-system-smoky.vercel.app/add_time_slot_config', {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
         body: JSON.stringify(timeRange)

@@ -5,7 +5,7 @@ const currentUserRole = document.body.getAttribute('data-role');
 
 // Fetch the clubs from the server and populate the dropdown list
 document.addEventListener('DOMContentLoaded', (event) => {
-    fetch('http://127.0.0.1:5001/clubs')
+    fetch('https://booking-system-smoky.vercel.app/clubs')
         .then(response => response.json())
         .then(data => {
             const clubSelect = document.getElementById('club');
@@ -19,9 +19,11 @@ document.addEventListener('DOMContentLoaded', (event) => {
         .catch(error => console.error('Error', error));
 });
 
+
+
 $(function () {
     // Fetch the available dates from the server and store them
-    fetch('http://127.0.0.1:5001/available_dates')
+    fetch('https://booking-system-smoky.vercel.app/available_dates')
         .then(response => response.json())
         .then(data => {
             availableDates = data.map(date => new Date(date));
@@ -35,6 +37,9 @@ $(function () {
         dateFormat: "yy-mm-dd",
         minDate: new Date(), // This prevents past dates from being selected
         beforeShowDay: function (date) {
+            if (currentUserRole === 'admin') {
+                return [true]; // Admins can select any date
+            }
             var dateStr = jQuery.datepicker.formatDate('yy-mm-dd', date);
             var isAvailable = availableDates.some(availableDate => availableDate.toDateString() === date.toDateString());
             console.log(dateStr + ' is ' + (isAvailable ? 'available' : 'not available'));
@@ -46,48 +51,82 @@ $(function () {
         }
     });
 
+    function selectTimeSlot(slot, isAdmin) {
+        if (!isAdmin) {
+            document.getElementById('bookingTime').value = slot;
+            document.querySelectorAll('.time-slot').forEach(b => b.classList.remove('selected'));
+            event.target.classList.add('selected');
+        }
+    }
+    
+    function deleteBooking(bookingId) {
+        fetch(`http://127.0.0.1:5001/delete_booking`, {
+            method: 'POST',
+            headers: { 'Content-Type': 'application/json' },
+            body: JSON.stringify({ booking_id: bookingId })
+        })
+        .then(response => {
+            console.log(response);
+            return response.json();
+        })
+        .then(data => {
+            console.log(data);
+            alert('Booking deleted');
+            fetchTimeSlots(document.getElementById('bookingDate').value); // Refresh slots after deletion
+        })
+        .catch(error => {
+            console.error('Error:', error);
+            alert('Failed to delete booking');
+        });
+    }
+
     function fetchTimeSlots(date) {
-        fetch(`http://127.0.0.1:5001/available_slots?date=${date}`)
+        fetch(`https://booking-system-smoky.vercel.app/available_slots?date=${date}`)
             .then(response => {
                 if (!response.ok) {
-                    throw new Error('No time slots available for the selected date');
+                    throw new Error('Failed to fetch time slots');
                 }
                 return response.json();
             })
-            .then(slots => {
-                // Sort the slots by time before creating buttons
-                slots.sort((a, b) => {
-                    // Convert time slots to date objects to compare
-                    const timeA = new Date(`1970-01-01T${a}:00Z`);
-                    const timeB = new Date(`1970-01-01T${b}:00Z`);
-                    return timeA - timeB;
-                });
-
+            .then(data => {
                 const slotsContainer = document.querySelector('.time-slots');
                 slotsContainer.innerHTML = ''; // Clear previous slots
 
-                // Create a button for each slot
-                slots.forEach(slot => {
+                const isAdmin = currentUserRole === 'admin';
+
+                data.available_slots.forEach(slot => {
                     const button = document.createElement('button');
                     button.type = 'button';
-                    button.classList.add('time-slot');
+                    button.classList.add('time-slot', 'available');
                     button.textContent = slot;
-                    button.onclick = function () {
-                        document.getElementById('bookingTime').value = date + 'T' + slot + ':00Z';
-                        // Deselect other buttons and select this one
+                    button.onclick = function() {
+                        document.getElementById('bookingTime').value = slot;
                         document.querySelectorAll('.time-slot').forEach(b => b.classList.remove('selected'));
-                        button.classList.add('selected');
+                        this.classList.add('selected');
                     };
                     slotsContainer.appendChild(button);
                 });
+
+                if (isAdmin) {
+                    data.booked_slots.forEach(slot => {
+                        const button = document.createElement('button');
+                        button.type = 'button';
+                        button.classList.add('time-slot', isAdmin ? 'admin-booked' : 'booked');
+                        button.textContent = `${slot.time} - Booked by ${slot.booked_by}`;
+                        button.onclick = function() {
+                            if (isAdmin) {
+                                deleteBooking(slot.booking_id);
+                            }
+                        };
+                        slotsContainer.appendChild(button);
+                    });
+                }
             })
             .catch(error => {
-                console.error(error);
-                const slotsContainer = document.querySelector('.time-slots');
-                slotsContainer.innerHTML = '<p>No available time slots for this date.</p>'; // Show message
+                console.error('Error:', error);
+                slotsContainer.innerHTML = '<p>Error fetching time slots.</p>'; // Show error message
             });
     }
-
     // Set the initial value of the hidden date input to today's date
     var today = new Date();
     var dateStr = $.datepicker.formatDate('yy-mm-dd', today);
@@ -127,7 +166,9 @@ document.getElementById('bookingForm').addEventListener('submit', (event) => {
     const name = document.getElementById('name').value;
     const email = document.getElementById('email').value;
     const clubId = document.getElementById('club').value;  // This now works for both roles as the ID is provided in the HTML
-    const clubName = document.getElementById('club_name').innerText; // Fetch the name directly if it's displayed
+    // Determine the club name based on the presence of the span or dropdown
+    let clubNameElement = document.getElementById('club_name');
+    let clubName = clubNameElement ? clubNameElement.innerText : document.querySelector("#club option:checked").text;
 
     // Retrieve the date and time
     const bookingDate = document.getElementById('bookingDate').value;
@@ -143,7 +184,7 @@ document.getElementById('bookingForm').addEventListener('submit', (event) => {
 
 
 
-    fetch('http://127.0.0.1:5001/book', {
+    fetch('https://booking-system-smoky.vercel.app/book', {
         method: 'POST',
         headers: {
             'Content-Type': 'application/json',
