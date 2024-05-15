@@ -444,3 +444,61 @@ body {
 
 
 
+/* Media Queries */
+@media (max-width: 768px) {
+    .login-container {
+        padding: 15px;
+    }
+
+    img {
+        height: 80px;
+        padding-bottom: 15px;
+    }
+
+    .input-group input,
+    button {
+        padding: 8px;
+    }
+
+    button {
+        font-size: 14px;
+    }
+
+    .signup-link {
+        margin-top: 15px;
+    }
+
+    .error {
+        font-size: 12px;
+        padding: 3px;
+    }
+}
+
+@media (max-width: 480px) {
+    .login-container {
+        padding: 10px;
+    }
+
+    img {
+        height: 60px;
+        padding-bottom: 10px;
+    }
+
+    .input-group input,
+    button {
+        padding: 6px;
+    }
+
+    button {
+        font-size: 12px;
+    }
+
+    .signup-link {
+        margin-top: 10px;
+    }
+
+    .error {
+        font-size: 10px;
+        padding: 2px;
+    }
+}
