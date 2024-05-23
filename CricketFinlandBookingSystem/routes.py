@@ -268,7 +268,7 @@ def init_routes(app):
                 if current_start_time.time() not in existing_slots:
                     new_slots.append({
                         'date': current_date,
-                        'time': current_start_time.time()
+                        'time': current_start_time.time().strftime('%H:%M')  # Convert to string
                     })
                     # Add the new slot configuration
                     new_config = TimeSlotConfig(
@@ -282,7 +282,7 @@ def init_routes(app):
                 else:
                     skipped_slots.append({
                         'date': current_date,
-                        'time': current_start_time.time()
+                        'time': current_start_time.time().strftime('%H:%M')  # Convert to string
                     })
                 current_start_time += timedelta(minutes=int(data['increment']))
             current_date += timedelta(days=1)
@@ -305,6 +305,7 @@ def init_routes(app):
                 return jsonify({'error': str(e)}), 500
         else:
             return jsonify({'message': 'No new time slots were added', 'skipped_slots': skipped_slots}), 200
+
         
     @app.route('/available_slots', methods=['GET'])
     def available_slots():

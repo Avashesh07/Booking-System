@@ -8,7 +8,7 @@ function populateTimeOptions() {
 
     // Create options for every hour and half-hour from 00:00 to 23:30
     for (let hour = 9; hour < 22; hour++) {
-        for (let min = 0; min < 60; min += 30) { // Increment by 30 minutes
+        for (let min = 0; min < 60; min += 60) { // Increment by 30 minutes
             let timeValue = hour.toString().padStart(2, '0') + ':' + min.toString().padStart(2, '0');
             times.push(timeValue);
         }
@@ -48,12 +48,18 @@ document.getElementById('timeSlotConfigForm').addEventListener('submit', functio
         headers: { 'Content-Type': 'application/json' },
         body: JSON.stringify(timeRange)
     })
-        .then(response => response.json())
-        .then(data => {
-            if (data.error) {
-                alert('Error: ' + data.error);
-            } else {
-                alert('Time range added successfully.');
+        .then(response => response.text()) // Get raw text response
+        .then(text => {
+            try {
+                const data = JSON.parse(text); // Attempt to parse as JSON
+                if (data.error) {
+                    alert('Error: ' + data.error);
+                } else {
+                    alert('Time range added successfully. Added slots: ' + JSON.stringify(data.new_slots) + '. Skipped slots: ' + JSON.stringify(data.skipped_slots));
+                }
+            } catch (e) {
+                console.error('Failed to parse JSON response:', text);
+                alert('Failed to save configuration. Raw response: ' + text);
             }
         })
         .catch(error => {

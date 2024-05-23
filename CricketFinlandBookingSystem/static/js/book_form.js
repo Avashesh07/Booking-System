@@ -91,39 +91,52 @@ $(function () {
             .then(data => {
                 const slotsContainer = document.querySelector('.time-slots');
                 slotsContainer.innerHTML = ''; // Clear previous slots
-
+    
                 const isAdmin = currentUserRole === 'admin';
-
-                data.available_slots.forEach(slot => {
+    
+                // Combine available and booked slots into one array for sorting
+                const allSlots = data.available_slots.map(slot => ({
+                    time: slot,
+                    type: 'available'
+                })).concat(data.booked_slots.map(slot => ({
+                    time: slot.time,
+                    type: 'booked',
+                    booked_by: slot.booked_by,
+                    booking_id: slot.booking_id
+                })));
+    
+                // Sort all slots by time
+                allSlots.sort((a, b) => {
+                    const timeA = new Date(`1970-01-01T${a.time}:00`);
+                    const timeB = new Date(`1970-01-01T${b.time}:00`);
+                    return timeA - timeB;
+                });
+    
+                // Render the sorted slots
+                allSlots.forEach(slot => {
                     const button = document.createElement('button');
                     button.type = 'button';
-                    button.classList.add('time-slot', 'available');
-                    button.textContent = slot;
-                    button.onclick = function() {
-                        document.getElementById('bookingTime').value = slot;
-                        document.querySelectorAll('.time-slot').forEach(b => b.classList.remove('selected'));
-                        this.classList.add('selected');
-                    };
+                    button.classList.add('time-slot', slot.type === 'available' ? 'available' : (isAdmin ? 'admin-booked' : 'booked'));
+                    button.textContent = slot.type === 'available' ? slot.time : `${slot.time} - Booked by ${slot.booked_by}`;
+    
+                    if (slot.type === 'available') {
+                        button.onclick = function() {
+                            document.getElementById('bookingTime').value = slot.time;
+                            document.querySelectorAll('.time-slot').forEach(b => b.classList.remove('selected'));
+                            this.classList.add('selected');
+                        };
+                    } else if (isAdmin && slot.type === 'booked') {
+                        button.onclick = function() {
+                            deleteBooking(slot.booking_id);
+                        };
+                    }
+    
                     slotsContainer.appendChild(button);
                 });
-
-                if (isAdmin) {
-                    data.booked_slots.forEach(slot => {
-                        const button = document.createElement('button');
-                        button.type = 'button';
-                        button.classList.add('time-slot', isAdmin ? 'admin-booked' : 'booked');
-                        button.textContent = `${slot.time} - Booked by ${slot.booked_by}`;
-                        button.onclick = function() {
-                            if (isAdmin) {
-                                deleteBooking(slot.booking_id);
-                            }
-                        };
-                        slotsContainer.appendChild(button);
-                    });
-                }
             })
             .catch(error => {
                 console.error('Error:', error);
+                const slotsContainer = document.querySelector('.time-slots');
                 slotsContainer.innerHTML = '<p>Error fetching time slots.</p>'; // Show error message
             });
     }
