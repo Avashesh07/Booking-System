@@ -234,25 +234,61 @@ def init_routes(app):
             # Handle incorrect date format
             return jsonify({'error': str(e)}), 400
 
-        # Check if the range for the given date already exists
-        existing_config = TimeSlotConfig.query.filter(
+        # Parse time strings to time objects
+        start_time = datetime.strptime(data['startTime'], '%H:%M').time()
+        end_time = datetime.strptime(data['endTime'], '%H:%M').time()
+
+        # Check for existing configurations
+        existing_configs = TimeSlotConfig.query.filter(
             TimeSlotConfig.dateRangeStart <= date_range_end,
             TimeSlotConfig.dateRangeEnd >= date_range_start
-        ).first()
+        ).all()
 
-        if existing_config:
-            return jsonify({'error': 'Range already exists for the given dates'}), 400
+        # Identify overlapping time slots
+        existing_slots = set()
+        for config in existing_configs:
+            current_date = config.dateRangeStart
+            while current_date <= config.dateRangeEnd:
+                if date_range_start <= current_date <= date_range_end:
+                    current_start_time = datetime.combine(current_date, datetime.strptime(config.start_time, '%H:%M').time())
+                    current_end_time = datetime.combine(current_date, datetime.strptime(config.end_time, '%H:%M').time())
+                    while current_start_time < current_end_time:
+                        existing_slots.add(current_start_time.time())
+                        current_start_time += timedelta(minutes=config.increment)
+                current_date += timedelta(days=1)
 
-        # Proceed to add the new configuration if it doesn't exist
-        new_config = TimeSlotConfig(
-            start_time=data['startTime'],
-            end_time=data['endTime'],
-            increment=int(data['increment']),
-            dateRangeStart=date_range_start,
-            dateRangeEnd=date_range_end
-        )
-        db.session.add(new_config)
-        if new_config:
+        # Add new configurations for non-overlapping time slots
+        new_slots = []
+        skipped_slots = []
+        current_date = date_range_start
+        while current_date <= date_range_end:
+            current_start_time = datetime.combine(current_date, start_time)
+            current_end_time = datetime.combine(current_date, end_time)
+            while current_start_time < current_end_time:
+                if current_start_time.time() not in existing_slots:
+                    new_slots.append({
+                        'date': current_date,
+                        'time': current_start_time.time()
+                    })
+                    # Add the new slot configuration
+                    new_config = TimeSlotConfig(
+                        start_time=current_start_time.time().strftime('%H:%M'),
+                        end_time=(current_start_time + timedelta(minutes=int(data['increment']))).time().strftime('%H:%M'),
+                        increment=int(data['increment']),
+                        dateRangeStart=current_date,
+                        dateRangeEnd=current_date
+                    )
+                    db.session.add(new_config)
+                else:
+                    skipped_slots.append({
+                        'date': current_date,
+                        'time': current_start_time.time()
+                    })
+                current_start_time += timedelta(minutes=int(data['increment']))
+            current_date += timedelta(days=1)
+
+        # Commit the new configurations to the database
+        if new_slots:
             try:
                 db.session.commit()
                 # Fetch all user emails
@@ -263,11 +299,13 @@ def init_routes(app):
                             recipients=email_list)
                 msg.body = "New time slots have been added, check them out on our website!"
                 mail.send(msg)
-                return jsonify({'message': 'Time slot configuration added successfully'}), 201
+                return jsonify({'message': 'Time slot configuration added successfully', 'new_slots': new_slots, 'skipped_slots': skipped_slots}), 201
             except Exception as e:
                 db.session.rollback()
                 return jsonify({'error': str(e)}), 500
-
+        else:
+            return jsonify({'message': 'No new time slots were added', 'skipped_slots': skipped_slots}), 200
+        
     @app.route('/available_slots', methods=['GET'])
     def available_slots():
         date_requested = request.args.get('date')
